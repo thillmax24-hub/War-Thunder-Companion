@@ -1,53 +1,736 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101820">
-<title>War Thunder Companion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141b15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="WT Companion">
+<title>WT Companion • Military Tactical</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#101820;color:white;font-family:Arial,sans-serif}
-header{padding:30px 20px;background:#1e2c39;border-bottom:2px solid #d4a34b}
-h1{font-size:25px;margin:0}
-.subtitle{color:#aab8c5;margin-top:8px}
-main{padding:20px}
-.card{background:#223240;border-radius:14px;padding:20px;margin-bottom:15px}
-.card h2{margin-top:0}
-button{background:#d4a34b;color:#101820;border:0;border-radius:9px;padding:12px 18px;font-weight:bold}
-footer{text-align:center;color:#8999a8;padding:20px;font-size:12px}
+:root {
+  color-scheme: dark;
+  --bg: #101510;
+  --panel: #1a231b;
+  --line: #354135;
+  --gold: #dfb968;
+  --text: #eef1e9;
+  --muted: #b5c0af;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+button, input, select { font: inherit; }
+
+button, a, input, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a { touch-action: manipulation; }
+
+button, select, input {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  min-height: 46px;
+  padding: 11px 14px;
+}
+
+button { cursor: pointer; }
+button:hover { border-color: var(--gold); }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: #141b15;
+  padding: 18px max(18px, env(safe-area-inset-left));
+}
+
+.top {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.brand span { color: var(--gold); }
+
+.brand small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  margin-top: 5px;
+}
+
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px 18px calc(110px + env(safe-area-inset-bottom));
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.hero {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 26px;
+  background:
+    radial-gradient(ellipse at top right, #394b2d, transparent 70%),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 22px,
+      #ffffff03 22px 23px
+    ),
+    var(--panel);
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 46px);
+  line-height: 1.1;
+  margin: 15px 0;
+}
+
+h2 {
+  font-size: 22px;
+  margin: 24px 0 14px;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.hero p { max-width: 530px; }
+
+.gold {
+  background: var(--gold);
+  color: #151a12;
+  font-weight: 800;
+  border-color: var(--gold);
+}
+
+.stats, .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stats { margin-top: 18px; }
+
+.stat, .card, .notice {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.stat strong {
+  display: block;
+  color: var(--gold);
+  font-size: 27px;
+}
+
+.stat span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+input, select {
+  width: 100%;
+  min-width: 0;
+}
+
+.card { position: relative; }
+
+.card h3 {
+  font-size: 19px;
+  margin: 14px 0 8px;
+}
+
+.badge {
+  display: inline-block;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border: 1px solid var(--line);
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.symbol {
+  font-size: 30px;
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+.card p {
+  font-size: 13px;
+  margin: 8px 0 18px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.link {
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.star {
+  font-size: 23px;
+  padding: 5px 13px;
+  color: var(--gold);
+}
+
+.star[aria-pressed="true"] {
+  background: #dfb96820;
+  border-color: var(--gold);
+}
+
+.notice {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 30px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #141b15f5;
+  border-top: 1px solid var(--line);
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  backdrop-filter: blur(12px);
+  z-index: 5;
+}
+
+nav button {
+  border: 0;
+  background: transparent;
+  flex: 1;
+  max-width: 170px;
+  padding: 8px 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+nav button span {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 4px;
+}
+
+nav button[aria-current="page"] {
+  background: #dfb96815;
+  color: var(--gold);
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 32px;
+  line-height: 1.7;
+}
+
+#status {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+#status:empty { display: none; }
+
+@media (max-width: 700px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .hero { padding: 22px; }
+  .stat { padding: 13px; }
+  .brand { font-size: 14px; }
+}
+
+@media (max-width: 420px) {
+  .grid { grid-template-columns: 1fr; }
+  .filters { grid-template-columns: 1fr; }
+  .stats { gap: 8px; }
+  .stat span { font-size: 11px; }
+}
 </style>
 </head>
+
 <body>
 <header>
-<h1>✈ WAR THUNDER COMPANION</h1>
-<p class="subtitle">Your battlefield assistant</p>
+  <div class="top">
+    <div class="brand">
+      <span>WT</span> COMPANION
+      <small>MILITARY TACTICAL</small>
+    </div>
+    <button id="language" aria-label="Switch to English">EN</button>
+  </div>
 </header>
+
 <main>
-<h2>Dashboard</h2>
-<div class="card">
-<h2>✈ Aircraft</h2>
-<p>Explore aircraft and their statistics.</p>
-<button onclick="alert('Aircraft database coming soon!')">Explore</button>
-</div>
-<div class="card">
-<h2>🛡 Ground Vehicles</h2>
-<p>Discover tanks and armored vehicles.</p>
-<button onclick="alert('Tank database coming soon!')">Explore</button>
-</div>
-<div class="card">
-<h2>🗺 Battle Maps</h2>
-<p>Maps and tactical guides.</p>
-<button onclick="alert('Maps coming soon!')">Explore</button>
-</div>
-<div class="card">
-<h2>⭐ Favorites</h2>
-<p>Your favorite vehicles in one place.</p>
-<button onclick="alert('Favorites coming soon!')">Explore</button>
-</div>
+  <div id="content"></div>
+  <p id="status" role="status"></p>
+  <footer id="footer"></footer>
 </main>
-<footer>Unofficial War Thunder Companion • Fan Project</footer>
+
+<nav id="navigation" aria-label="Navigation"></nav>
+
+<script>
+'use strict';
+
+const vehicles = [
+  {id:'bf109', name:'Bf 109 E-3', nation:'de', type:'air'},
+  {id:'fw190', name:'Fw 190 A-1', nation:'de', type:'air'},
+  {id:'p51', name:'P-51D-5', nation:'us', type:'air'},
+  {id:'p47', name:'P-47D-28', nation:'us', type:'air'},
+  {id:'spitfire', name:'Spitfire Mk Ia', nation:'gb', type:'air'},
+  {id:'yak', name:'Yak-1', nation:'su', type:'air'},
+  {id:'tiger', name:'Tiger H1', nation:'de', type:'ground'},
+  {id:'panther', name:'Panther D', nation:'de', type:'ground'},
+  {id:'sherman', name:'M4A1', nation:'us', type:'ground'},
+  {id:'chaffee', name:'M24', nation:'us', type:'ground'},
+  {id:'cromwell', name:'Cromwell V', nation:'gb', type:'ground'},
+  {id:'t34', name:'T-34 (1942)', nation:'su', type:'ground'}
+];
+
+const texts = {
+  de: {
+    home: 'Basis',
+    air: 'Flugzeuge',
+    ground: 'Panzer',
+    favorites: 'Favoriten',
+    info: 'Info',
+    title: 'Deine Einsatzzentrale.',
+    intro: 'Finde Fahrzeuge, sammle Favoriten und plane dein nächstes Gefecht.',
+    explore: 'Fahrzeuge entdecken',
+    catalog: 'Starter-Katalog',
+    saved: 'Gespeichert',
+    nations: 'Nationen',
+    search: 'Fahrzeug suchen …',
+    all: 'Alle Nationen',
+    de: 'Deutschland',
+    us: 'USA',
+    gb: 'Großbritannien',
+    su: 'UdSSR',
+    wiki: 'Wiki öffnen ↗',
+    save: 'Favorit speichern',
+    remove: 'Favorit entfernen',
+    empty: 'Keine Fahrzeuge gefunden. Ändere deine Suche oder den Nationenfilter.',
+    noFav: 'Noch keine Favoriten. Tippe bei einem Fahrzeug auf ☆.',
+    note: 'Starter-Auswahl mit 12 Fahrzeugen. Keine vollständige oder automatisch aktualisierte Datenbank. Aktuelle Battle Ratings und Werte bitte im Spiel oder offiziellen Wiki prüfen.',
+    infoTitle: 'Dein Companion',
+    infoText: 'Diese Version braucht keinen Account und keine kostenpflichtige API. Favoriten und Sprache werden nur in diesem Browser auf deinem Gerät gespeichert. Keine Synchronisierung zwischen iPhone und PC.',
+    maps: 'Karten & Spielwissen',
+    mapsText: 'Für Karten und aktuelle Fahrzeugdaten kannst du das offizielle War-Thunder-Wiki öffnen. Eine interaktive Karte oder Live-Verbindung ist in dieser Version noch nicht enthalten.',
+    openWiki: 'Offizielles Wiki öffnen ↗',
+    install: 'Auf dem iPhone',
+    installText: 'Öffne diese Seite in Safari und wähle im Teilen-Menü „Zum Home-Bildschirm“. Für diese Version brauchst du eine Internetverbindung zum Öffnen der Seite.',
+    storage: 'Der Browser hat das Speichern blockiert. Änderungen bleiben nur bis zum Schließen dieser Seite erhalten.',
+    footer: 'Inoffizielles Fanprojekt. Nicht mit Gaijin verbunden.',
+    count: 'Treffer'
+  },
+
+  en: {
+    home: 'Base',
+    air: 'Aircraft',
+    ground: 'Tanks',
+    favorites: 'Favorites',
+    info: 'Info',
+    title: 'Your mission control.',
+    intro: 'Find vehicles, collect favorites and prepare for your next battle.',
+    explore: 'Explore vehicles',
+    catalog: 'Starter catalog',
+    saved: 'Saved',
+    nations: 'Nations',
+    search: 'Search vehicles …',
+    all: 'All nations',
+    de: 'Germany',
+    us: 'USA',
+    gb: 'Great Britain',
+    su: 'USSR',
+    wiki: 'Open wiki ↗',
+    save: 'Save favorite',
+    remove: 'Remove favorite',
+    empty: 'No vehicles found. Change your search or nation filter.',
+    noFav: 'No favorites yet. Tap ☆ on a vehicle to save it.',
+    note: 'Starter selection of 12 vehicles. This is not a complete or automatically updated database. Check the game or official wiki for current battle ratings and statistics.',
+    infoTitle: 'Your companion',
+    infoText: 'This version requires no account or paid API. Favorites and language are saved only in this browser on your device. No syncing between iPhone and PC.',
+    maps: 'Maps & game knowledge',
+    mapsText: 'Open the official War Thunder Wiki for maps and current vehicle details. An interactive map or live connection is not included in this version yet.',
+    openWiki: 'Open official wiki ↗',
+    install: 'On your iPhone',
+    installText: 'Open this page in Safari, then choose “Add to Home Screen” in the share menu. This version needs an internet connection to open the page.',
+    storage: 'Browser storage is blocked. Changes will last only until you close this page.',
+    footer: 'Unofficial fan project. Not affiliated with Gaijin.',
+    count: 'Results'
+  }
+};
+
+let storageBlocked = false;
+
+function read(key, fallback) {
+  try {
+    return localStorage.getItem(key) || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+let lang = read('wt-language', 'de');
+if (!texts[lang]) lang = 'de';
+
+let favorites = new Set();
+
+try {
+  const saved = JSON.parse(read('wt-favorites', '[]'));
+
+  if (Array.isArray(saved)) {
+    favorites = new Set(
+      saved.filter(id => vehicles.some(v => v.id === id))
+    );
+  }
+} catch {}
+
+let page = 'home';
+let query = '';
+let nation = 'all';
+
+const content = document.getElementById('content');
+
+function t(key) {
+  return texts[lang][key];
+}
+
+function persist(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    storageBlocked = true;
+  }
+
+  document.getElementById('status').textContent =
+    storageBlocked ? t('storage') : '';
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
+
+function go(next) {
+  page = next;
+  query = '';
+  nation = 'all';
+  render();
+  window.scrollTo({top: 0, behavior: 'auto'});
+}
+
+function cards() {
+  const list = vehicles.filter(v =>
+    (page === 'favorites'
+      ? favorites.has(v.id)
+      : v.type === page) &&
+    (nation === 'all' || v.nation === nation) &&
+    v.name.toLowerCase().includes(query.toLowerCase().trim())
+  );
+
+  document.getElementById('results').textContent =
+    `${list.length} ${t('count')}`;
+
+  document.getElementById('cards').innerHTML = list.length
+    ? list.map(v => `
+      <article class="card">
+        <span class="badge">${t(v.nation)}</span>
+
+        <div class="symbol" aria-hidden="true">
+          ${v.type === 'air' ? '✈' : '▰'}
+        </div>
+
+        <h3>${escapeHTML(v.name)}</h3>
+        <p>${t(v.type)}</p>
+
+        <div class="actions">
+          <a
+            class="link"
+            href="https://wiki.warthunder.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >${t('wiki')}</a>
+
+          <button
+            class="star"
+            data-favorite="${v.id}"
+            aria-pressed="${favorites.has(v.id)}"
+            aria-label="${t(favorites.has(v.id) ? 'remove' : 'save')}: ${escapeHTML(v.name)}"
+          >${favorites.has(v.id) ? '★' : '☆'}</button>
+        </div>
+      </article>
+    `).join('')
+    : `
+      <div class="empty">
+        ${t(page === 'favorites' && favorites.size === 0
+          ? 'noFav'
+          : 'empty')}
+      </div>
+    `;
+}
+
+function render() {
+  document.documentElement.lang = lang;
+
+  const language = document.getElementById('language');
+  language.textContent = lang === 'de' ? 'EN' : 'DE';
+  language.setAttribute(
+    'aria-label',
+    lang === 'de' ? 'Switch to English' : 'Auf Deutsch wechseln'
+  );
+
+  document.getElementById('footer').textContent = t('footer');
+  document.getElementById('status').textContent =
+    storageBlocked ? t('storage') : '';
+
+  const tabs = [
+    ['home', '⌂'],
+    ['air', '✈'],
+    ['ground', '▰'],
+    ['favorites', '★'],
+    ['info', 'ⓘ']
+  ];
+
+  document.getElementById('navigation').innerHTML =
+    tabs.map(([key, icon]) => `
+      <button
+        data-page="${key}"
+        ${page === key ? 'aria-current="page"' : ''}
+      >
+        <span aria-hidden="true">${icon}</span>
+        ${t(key)}
+      </button>
+    `).join('');
+
+  if (page === 'home') {
+    content.innerHTML = `
+      <section class="hero">
+        <div class="eyebrow">WAR THUNDER / COMPANION</div>
+        <h1>${t('title')}</h1>
+        <p>${t('intro')}</p>
+        <button class="gold" data-page="air">
+          ${t('explore')} →
+        </button>
+      </section>
+
+      <div class="stats">
+        <div class="stat">
+          <strong>${vehicles.length}</strong>
+          <span>${t('catalog')}</span>
+        </div>
+
+        <div class="stat">
+          <strong>${favorites.size}</strong>
+          <span>${t('saved')}</span>
+        </div>
+
+        <div class="stat">
+          <strong>4</strong>
+          <span>${t('nations')}</span>
+        </div>
+      </div>
+
+      <h2>${t('catalog')}</h2>
+
+      <div class="grid">
+        ${[
+          ['air', '✈'],
+          ['ground', '▰'],
+          ['favorites', '★']
+        ].map(([key, icon]) => `
+          <button class="card" data-page="${key}">
+            <div class="symbol" aria-hidden="true">${icon}</div>
+            <h3>${t(key)}</h3>
+          </button>
+        `).join('')}
+      </div>
+
+      <div class="notice">${t('note')}</div>
+    `;
+
+  } else if (page === 'info') {
+    content.innerHTML = `
+      <div class="eyebrow">FIELD MANUAL</div>
+      <h1>${t('infoTitle')}</h1>
+
+      <div class="notice">${t('infoText')}</div>
+
+      <h2>${t('maps')}</h2>
+
+      <section class="card">
+        <p>${t('mapsText')}</p>
+        <a
+          class="link"
+          href="https://wiki.warthunder.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >${t('openWiki')}</a>
+      </section>
+
+      <h2>${t('install')}</h2>
+      <div class="notice">${t('installText')}</div>
+    `;
+
+  } else {
+    content.innerHTML = `
+      <div class="eyebrow">VEHICLE OPERATIONS</div>
+      <h1>${t(page)}</h1>
+
+      <div class="filters">
+        <input
+          id="search"
+          type="search"
+          placeholder="${t('search')}"
+          aria-label="${t('search')}"
+          value="${escapeHTML(query)}"
+        >
+
+        <select id="nation" aria-label="${t('nations')}">
+          ${['all', 'de', 'us', 'gb', 'su'].map(key => `
+            <option
+              value="${key}"
+              ${nation === key ? 'selected' : ''}
+            >${t(key)}</option>
+          `).join('')}
+        </select>
+      </div>
+
+      <p id="results" role="status"></p>
+      <div id="cards" class="grid"></div>
+      <div class="notice">${t('note')}</div>
+    `;
+
+    cards();
+
+    document.getElementById('search')
+      .addEventListener('input', e => {
+        query = e.target.value;
+        cards();
+      });
+
+    document.getElementById('nation')
+      .addEventListener('change', e => {
+        nation = e.target.value;
+        cards();
+      });
+  }
+}
+
+document.addEventListener('click', e => {
+  const tab = e.target.closest('[data-page]');
+
+  if (tab) {
+    go(tab.dataset.page);
+    return;
+  }
+
+  const star = e.target.closest('[data-favorite]');
+  if (!star) return;
+
+  const id = star.dataset.favorite;
+
+  if (favorites.has(id)) {
+    favorites.delete(id);
+  } else {
+    favorites.add(id);
+  }
+
+  persist('wt-favorites', JSON.stringify([...favorites]));
+
+  if (page === 'favorites') {
+    cards();
+    document.getElementById('cards')
+      .querySelector('button')?.focus();
+  } else {
+    star.textContent = favorites.has(id) ? '★' : '☆';
+    star.setAttribute('aria-pressed', String(favorites.has(id)));
+    star.setAttribute(
+      'aria-label',
+      `${t(favorites.has(id) ? 'remove' : 'save')}: ${
+        vehicles.find(v => v.id === id).name
+      }`
+    );
+  }
+});
+
+document.getElementById('language')
+  .addEventListener('click', () => {
+    lang = lang === 'de' ? 'en' : 'de';
+    persist('wt-language', lang);
+    render();
+  });
+
+render();
+</script>
 </body>
 </html>
-  
