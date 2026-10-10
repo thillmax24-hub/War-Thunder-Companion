@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "War Thunder Companion",
+  "short_name": "WT Companion",
+  "description": "Inoffizieller Fahrzeugkatalog mit Favoriten, Vergleich und Lineup-Planer.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101510",
+  "theme_color": "#141b15",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
