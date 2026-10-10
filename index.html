@@ -1558,4 +1558,639 @@ button:disabled{opacity:.45;cursor:default;}
 })();
 </script>
 </body>
+<!-- WT LINEUP PLANNER -->
+<style>
+.wt-lineup-pick {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.wt-lineup-pick[aria-pressed="true"] {
+  border-color: #dfb968;
+  color: #dfb968;
+}
+
+#wt-lineup-dialog {
+  width: min(680px, 95vw);
+  max-height: 88dvh;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid #dfb968;
+  border-radius: 18px;
+  background: #172019;
+  color: #edf2e9;
+}
+
+#wt-lineup-dialog::backdrop {
+  background: #000b;
+}
+
+.wt-lineup-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.wt-lineup-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.wt-lineup-fields label {
+  font-size: 13px;
+  color: #abb8a9;
+}
+
+.wt-lineup-fields input,
+.wt-lineup-fields select {
+  margin-top: 6px;
+}
+
+.wt-lineup-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #344437;
+}
+
+.wt-lineup-slot small {
+  display: block;
+  color: #abb8a9;
+  margin-top: 5px;
+}
+
+.wt-lineup-result {
+  padding: 16px;
+  margin: 16px 0;
+  border: 1px solid #344437;
+  border-radius: 12px;
+  color: #dfb968;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+#wt-lineup-message {
+  color: #dfb968;
+  font-size: 13px;
+}
+
+@media (max-width: 420px) {
+  .wt-lineup-fields {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<script>
+(() => {
+  if (window.wtLineupPlanner) return;
+  window.wtLineupPlanner = true;
+
+  const root = document.getElementById('content');
+  const nav = document.getElementById('navigation');
+
+  if (!root || !nav) return;
+
+  const t = (de, en) =>
+    document.documentElement.lang === 'en' ? en : de;
+
+  const esc = v =>
+    String(v ?? '—').replace(/[&<>"']/g, c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c]));
+
+  const read = (key, fallback) => {
+    try {
+      return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
+  const write = (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const keys = [
+    'germany', 'usa', 'britain', 'ussr', 'france',
+    'italy', 'japan', 'china', 'sweden', 'israel'
+  ];
+
+  const countries = {
+    germany: ['Deutschland', 'Germany'],
+    usa: ['USA', 'USA'],
+    britain: ['Großbritannien', 'Great Britain'],
+    ussr: ['UdSSR', 'USSR'],
+    france: ['Frankreich', 'France'],
+    italy: ['Italien', 'Italy'],
+    japan: ['Japan', 'Japan'],
+    china: ['China', 'China'],
+    sweden: ['Schweden', 'Sweden'],
+    israel: ['Israel', 'Israel']
+  };
+
+  function clean(data) {
+    if (!data || typeof data !== 'object') data = {};
+
+    let list = Array.isArray(data.vehicles)
+      ? data.vehicles.filter(v =>
+          v &&
+          typeof v.id === 'string' &&
+          keys.includes(v.country)
+        )
+      : [];
+
+    const country = list[0]?.country;
+
+    list = [
+      ...new Map(
+        list
+          .filter(v => v.country === country)
+          .map(v => [v.id, v])
+      ).values()
+    ];
+
+    return {
+      id: typeof data.id === 'string' ? data.id : '',
+      name: typeof data.name === 'string' ? data.name : '',
+      mode: ['ab', 'rb', 'sb'].includes(data.mode)
+        ? data.mode
+        : 'rb',
+      battle: data.battle === 'ground'
+        ? 'ground'
+        : 'standard',
+      vehicles: list
+    };
+  }
+
+  let draft = clean(read('wt-lineup-draft-v1', {}));
+  let plans = read('wt-lineups-v1', []);
+
+  plans = Array.isArray(plans)
+    ? plans.map(clean).filter(p => p.id && p.name)
+    : [];
+
+  let message = '';
+
+  const modal = document.createElement('dialog');
+  modal.id = 'wt-lineup-dialog';
+  modal.setAttribute('aria-labelledby', 'wt-lineup-title');
+  document.body.append(modal);
+
+  function name(v) {
+    const language =
+      document.documentElement.lang === 'en' ? 'en' : 'de';
+
+    return read('wt-names-v1-' + language, null)
+      ?.data?.vehicles?.[v.id.toLowerCase() + '_short']
+      || v.name
+      || v.id;
+  }
+
+  function find(id) {
+    for (const key of keys) {
+      const vehicle = read('wt-country-v1-' + key, null)
+        ?.items?.find(v => v.id === id);
+
+      if (vehicle) return vehicle;
+    }
+
+    return read('wt-snapshots', {})?.[id];
+  }
+
+  function rating(v) {
+    const special = draft.mode === 'rb'
+      ? 'grb'
+      : draft.mode === 'sb'
+        ? 'gsb'
+        : null;
+
+    if (
+      draft.battle === 'ground' &&
+      v.category === 'air' &&
+      special
+    ) {
+      return v[special];
+    }
+
+    return v[draft.mode];
+  }
+
+  function format(value) {
+    return typeof value === 'number' && Number.isFinite(value)
+      ? value.toFixed(1)
+      : '—';
+  }
+
+  function persist() {
+    if (!write('wt-lineup-draft-v1', draft)) {
+      message = t(
+        'Speichern auf diesem Gerät nicht möglich.',
+        'Saving on this device is unavailable.'
+      );
+    }
+  }
+
+  function updateButtons() {
+    let button = nav.querySelector('[data-lineup-open]');
+
+    if (!button) {
+      button = document.createElement('button');
+      button.dataset.lineupOpen = '';
+      nav.append(button);
+    }
+
+    const title =
+      `<span aria-hidden="true">▤</span>` +
+      `Lineups (${draft.vehicles.length})`;
+
+    if (button.innerHTML !== title) {
+      button.innerHTML = title;
+    }
+
+    root.querySelectorAll('.catalog-card').forEach(card => {
+      const inspect = card.querySelector('[data-inspect]');
+      if (!inspect) return;
+
+      let pick = card.querySelector('[data-lineup-pick]');
+
+      if (!pick) {
+        pick = document.createElement('button');
+        pick.className = 'wt-lineup-pick';
+        pick.dataset.lineupPick = inspect.dataset.inspect;
+        card.append(pick);
+      }
+
+      const active = draft.vehicles.some(
+        v => v.id === inspect.dataset.inspect
+      );
+
+      const text = active
+        ? t('✓ Im Lineup', '✓ In lineup')
+        : t('+ Zum Lineup', '+ Add to lineup');
+
+      if (pick.textContent !== text) {
+        pick.textContent = text;
+      }
+
+      if (pick.getAttribute('aria-pressed') !== String(active)) {
+        pick.setAttribute('aria-pressed', String(active));
+      }
+    });
+  }
+
+  function paint() {
+    const values = draft.vehicles.map(rating);
+
+    const known = values.filter(
+      n => typeof n === 'number' && Number.isFinite(n)
+    );
+
+    const maximum = known.length ? Math.max(...known) : null;
+    const incomplete = known.length < values.length;
+    const country = draft.vehicles[0]?.country;
+
+    modal.innerHTML = `
+      <button data-lineup-close>
+        ${t('Schließen', 'Close')} ✕
+      </button>
+
+      <h2 id="wt-lineup-title">
+        ${t('Lineup-Planer', 'Lineup planner')}
+      </h2>
+
+      <label>
+        ${t('Gespeicherte Aufstellungen', 'Saved lineups')}
+
+        <select id="wt-lineup-saved">
+          <option value="">
+            ${t('Aufstellung laden …', 'Load lineup …')}
+          </option>
+
+          ${plans.map(p => `
+            <option value="${esc(p.id)}">
+              ${esc(p.name)} (${p.vehicles.length})
+            </option>
+          `).join('')}
+        </select>
+      </label>
+
+      <div class="wt-lineup-fields">
+        <label>
+          ${t('Name', 'Name')}
+
+          <input
+            id="wt-lineup-name"
+            maxlength="80"
+            value="${esc(draft.name)}"
+            placeholder="${t(
+              'Deutschland Boden-RB',
+              'Germany Ground RB'
+            )}"
+          >
+        </label>
+
+        <label>
+          ${t('Spielmodus', 'Game mode')}
+
+          <select id="wt-lineup-mode">
+            ${[
+              ['ab', 'Arcade'],
+              ['rb', t('Realistisch', 'Realistic')],
+              ['sb', 'Simulator']
+            ].map(([key, title]) => `
+              <option
+                value="${key}"
+                ${draft.mode === key ? 'selected' : ''}
+              >
+                ${title}
+              </option>
+            `).join('')}
+          </select>
+        </label>
+
+        <label>
+          ${t('BR-Basis', 'BR basis')}
+
+          <select id="wt-lineup-battle">
+            <option
+              value="standard"
+              ${draft.battle === 'standard' ? 'selected' : ''}
+            >
+              ${t(
+                'Standard-Fahrzeug-BR',
+                'Standard vehicle BR'
+              )}
+            </option>
+
+            <option
+              value="ground"
+              ${draft.battle === 'ground' ? 'selected' : ''}
+            >
+              ${t(
+                'Bodengefechte (Flugzeug-BR)',
+                'Ground battles (aircraft BR)'
+              )}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div class="wt-lineup-result">
+        ${t('Höchster ausgewählter BR', 'Highest selected BR')}:
+        ${format(maximum)} · ${draft.mode.toUpperCase()}
+        ${incomplete ? ' · ' + t('unvollständig', 'incomplete') : ''}
+      </div>
+
+      <p>
+        ${country ? esc(t(...countries[country])) + ' · ' : ''}
+        ${draft.vehicles.length} ${t('Fahrzeuge', 'vehicles')}
+      </p>
+
+      <div>
+        ${draft.vehicles.map(v => `
+          <div class="wt-lineup-slot">
+            <div>
+              <strong>${esc(name(v))}</strong>
+              <small>BR ${format(rating(v))}</small>
+            </div>
+
+            <button
+              data-lineup-remove="${esc(v.id)}"
+              aria-label="${esc(
+                t('Entfernen: ', 'Remove: ') + name(v)
+              )}"
+            >×</button>
+          </div>
+        `).join('') || `
+          <p>${t(
+            'Noch keine Fahrzeuge. Schließe dieses Fenster und tippe auf den Fahrzeugkarten auf „+ Zum Lineup“.',
+            'No vehicles yet. Close this window and tap “+ Add to lineup” on vehicle cards.'
+          )}</p>
+        `}
+      </div>
+
+      <div class="wt-lineup-controls">
+        <button class="gold" data-lineup-save>
+          ${t('Aufstellung speichern', 'Save lineup')}
+        </button>
+
+        <button data-lineup-new>
+          ${t('Neue Aufstellung', 'New lineup')}
+        </button>
+      </div>
+
+      <p id="wt-lineup-message" role="status">
+        ${esc(message)}
+      </p>
+
+      <p class="notice">${t(
+        'Alle Fahrzeuge müssen derselben Forschungsnation angehören. Der angezeigte Wert ist der höchste BR deiner Auswahl, keine vollständige Matchmaking-Berechnung. Bei fehlenden Werten ist das Ergebnis unvollständig. Gespeicherte Aufstellungen bleiben auf diesem Gerät.',
+        'All vehicles must belong to the same research nation. The displayed value is the highest BR selected, not a complete matchmaking calculation. Missing values make the result incomplete. Saved lineups stay on this device.'
+      )}</p>
+    `;
+
+    document.getElementById('wt-lineup-name')
+      .addEventListener('input', event => {
+        draft.name = event.target.value;
+        persist();
+      });
+
+    document.getElementById('wt-lineup-mode')
+      .addEventListener('change', event => {
+        draft.mode = event.target.value;
+        persist();
+        paint();
+      });
+
+    document.getElementById('wt-lineup-battle')
+      .addEventListener('change', event => {
+        draft.battle = event.target.value;
+        persist();
+        paint();
+      });
+
+    document.getElementById('wt-lineup-saved')
+      .addEventListener('change', event => {
+        const plan = plans.find(p => p.id === event.target.value);
+        if (!plan) return;
+
+        draft = clean(JSON.parse(JSON.stringify(plan)));
+        draft.vehicles = draft.vehicles.map(v => find(v.id) || v);
+
+        message = t('Aufstellung geladen.', 'Lineup loaded.');
+
+        persist();
+        updateButtons();
+        paint();
+      });
+  }
+
+  function open() {
+    paint();
+    if (!modal.open) modal.showModal();
+  }
+
+  document.addEventListener('click', event => {
+    const button = event.target.closest(
+      '[data-lineup-open],' +
+      '[data-lineup-close],' +
+      '[data-lineup-pick],' +
+      '[data-lineup-remove],' +
+      '[data-lineup-save],' +
+      '[data-lineup-new]'
+    );
+
+    if (!button) return;
+
+    if (button.hasAttribute('data-lineup-open')) {
+      open();
+      return;
+    }
+
+    if (button.hasAttribute('data-lineup-close')) {
+      modal.close();
+      return;
+    }
+
+    if (button.hasAttribute('data-lineup-new')) {
+      draft = clean({});
+
+      message = t(
+        'Neue Aufstellung. Gespeicherte Aufstellungen bleiben erhalten.',
+        'New lineup. Saved lineups are retained.'
+      );
+
+      persist();
+      updateButtons();
+      paint();
+      return;
+    }
+
+    if (button.hasAttribute('data-lineup-save')) {
+      draft.name = draft.name.trim();
+
+      if (!draft.name || !draft.vehicles.length) {
+        message = t(
+          'Bitte einen Namen eingeben und mindestens ein Fahrzeug hinzufügen.',
+          'Enter a name and add at least one vehicle.'
+        );
+
+        paint();
+        return;
+      }
+
+      const copy = JSON.parse(JSON.stringify(draft));
+
+      copy.id = copy.id ||
+        'lineup-' + Date.now() + '-' +
+        Math.random().toString(36).slice(2, 8);
+
+      const next = plans
+        .filter(p => p.id !== copy.id)
+        .concat(copy);
+
+      if (write('wt-lineups-v1', next)) {
+        plans = next;
+        draft.id = copy.id;
+        persist();
+
+        message = t(
+          'Aufstellung gespeichert.',
+          'Lineup saved.'
+        );
+      } else {
+        message = t(
+          'Speichern auf diesem Gerät nicht möglich.',
+          'Saving on this device is unavailable.'
+        );
+      }
+
+      paint();
+      return;
+    }
+
+    const id =
+      button.dataset.lineupPick ||
+      button.dataset.lineupRemove;
+
+    if (draft.vehicles.some(v => v.id === id)) {
+      draft.vehicles = draft.vehicles.filter(v => v.id !== id);
+      message = '';
+    } else {
+      const vehicle = find(id);
+
+      if (!vehicle || !keys.includes(vehicle.country)) {
+        message = t(
+          'Bitte zuerst die Nation dieses Fahrzeugs öffnen, damit seine Daten geladen werden.',
+          'Open this vehicle’s nation first to load its data.'
+        );
+
+        open();
+        return;
+      }
+
+      if (
+        draft.vehicles.length &&
+        draft.vehicles[0].country !== vehicle.country
+      ) {
+        message = t(
+          'Dieses Fahrzeug gehört zu einer anderen Nation. Speichere dein Lineup und starte eine neue Aufstellung.',
+          'This vehicle belongs to another nation. Save your lineup and start a new one.'
+        );
+
+        open();
+        return;
+      }
+
+      draft.vehicles.push({
+        ...vehicle,
+        name: name(vehicle)
+      });
+
+      message = '';
+    }
+
+    persist();
+    updateButtons();
+
+    if (modal.open) paint();
+  });
+
+  const observer = new MutationObserver(updateButtons);
+
+  observer.observe(root, {
+    childList: true,
+    subtree: true
+  });
+
+  observer.observe(nav, {
+    childList: true
+  });
+
+  new MutationObserver(() => {
+    updateButtons();
+    if (modal.open) paint();
+  }).observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['lang']
+  });
+
+  updateButtons();
+})();
+</script>
+<!-- /WT LINEUP PLANNER -->
 </html>
