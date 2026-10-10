@@ -732,5 +732,180 @@ document.getElementById('language')
 
 render();
 </script>
+<style>
+#vehicle-detail {
+  width: min(560px, calc(100% - 28px));
+  max-height: 85dvh;
+  overflow-y: auto;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 24px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+#vehicle-detail::backdrop {
+  background: #000b;
+}
+
+#vehicle-detail h2 {
+  margin: 16px 0;
+}
+
+#vehicle-detail table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#vehicle-detail th,
+#vehicle-detail td {
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 14px;
+}
+
+#vehicle-detail th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+#vehicle-detail td {
+  text-align: right;
+}
+
+.detail-button {
+  width: 100%;
+  margin-top: 14px;
+}
+</style>
+
+<dialog
+  id="vehicle-detail"
+  aria-labelledby="detail-title"
+></dialog>
+
+<script>
+const tigerSource =
+  'https://wiki.warthunder.com/unit/germ_pzkpfw_VI_ausf_h1_tiger';
+
+const detailDialog =
+  document.getElementById('vehicle-detail');
+
+const originalVehicleCards = cards;
+
+cards = function () {
+  originalVehicleCards();
+
+  const tigerStar =
+    document.querySelector('[data-favorite="tiger"]');
+
+  if (!tigerStar) return;
+
+  const button = document.createElement('button');
+  button.className = 'detail-button gold';
+  button.dataset.detail = 'tiger';
+
+  button.textContent = lang === 'de'
+    ? 'Fahrzeugdetails →'
+    : 'Vehicle details →';
+
+  tigerStar.closest('article').appendChild(button);
+};
+
+function openTigerDetails() {
+  const german = lang === 'de';
+
+  const labels = german ? {
+    close: 'Schließen',
+    rank: 'Rang',
+    role: 'Klasse',
+    heavy: 'Schwerer Panzer',
+    gun: 'Hauptbewaffnung',
+    crew: 'Besatzung',
+    people: '5 Personen',
+    weight: 'Gewicht',
+    hull: 'Wanne: Front / Seite / Heck',
+    turret: 'Turm: Front / Seite / Heck',
+    speed: 'Höchstgeschwindigkeit',
+    speedNote: '45–48 km/h, je nach Spielmodus',
+    source: 'Quelle: offizielles War-Thunder-Wiki ↗',
+    note: 'Geprüft am 10.10.2026. Manuell hinterlegte Daten; keine automatische Aktualisierung. Geschwindigkeit und weitere Werte können je nach Modus und Ausbau variieren.'
+  } : {
+    close: 'Close',
+    rank: 'Rank',
+    role: 'Class',
+    heavy: 'Heavy tank',
+    gun: 'Main armament',
+    crew: 'Crew',
+    people: '5 people',
+    weight: 'Weight',
+    hull: 'Hull: front / side / rear',
+    turret: 'Turret: front / side / rear',
+    speed: 'Maximum speed',
+    speedNote: '45–48 km/h, depending on game mode',
+    source: 'Source: official War Thunder Wiki ↗',
+    note: 'Checked on 10 October 2026. Manually stored data; no automatic updates. Speed and other values may vary with mode and modifications.'
+  };
+
+  const rows = [
+    [labels.rank, 'III'],
+    [labels.role, labels.heavy],
+    ['Battle Rating · Arcade (AB)', '5.7'],
+    [
+      'Battle Rating · ' +
+      (german ? 'Realistisch' : 'Realistic') +
+      ' (RB)',
+      '5.7'
+    ],
+    ['Battle Rating · Simulator (SB)', '5.7'],
+    [labels.gun, '88 mm KwK36'],
+    [labels.crew, labels.people],
+    [labels.weight, german ? '57,3 t' : '57.3 t'],
+    [labels.hull, '100 / 80 / 80 mm'],
+    [labels.turret, '100 / 80 / 80 mm'],
+    [labels.speed, labels.speedNote]
+  ];
+
+  detailDialog.innerHTML = `
+    <button id="close-detail" autofocus>
+      ${labels.close} ✕
+    </button>
+
+    <h2 id="detail-title">Tiger H1</h2>
+
+    <table aria-label="Tiger H1">
+      <tbody>
+        ${rows.map(([label, value]) => `
+          <tr>
+            <th scope="row">${label}</th>
+            <td>${value}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+
+    <p class="notice">${labels.note}</p>
+
+    <a
+      class="link"
+      href="${tigerSource}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >${labels.source}</a>
+  `;
+
+  document.getElementById('close-detail').onclick =
+    () => detailDialog.close();
+
+  detailDialog.showModal();
+}
+
+document.addEventListener('click', event => {
+  if (event.target.closest('[data-detail="tiger"]')) {
+    openTigerDetails();
+  }
+});
+</script>
 </body>
 </html>
