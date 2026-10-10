@@ -1,273 +1,3069 @@
-<!-- WT BR FILTER -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141b15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="WT Companion">
+<title>WT Companion • Military Tactical</title>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+
 <style>
-.wt-br-controls {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+:root{
+  color-scheme:dark;
+  --bg:#101510;
+  --panel:#1a231b;
+  --line:#354135;
+  --gold:#dfb968;
+  --text:#eef1e9;
+  --muted:#b5c0af;
 }
-
-.wt-br-controls label {
-  font-size: 13px;
-  color: var(--muted);
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif;
 }
-
-.wt-br-controls select {
-  margin-top: 6px;
+button,input,select{font:inherit}
+button,a,input,select{-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+button,select,input{
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel);
+  color:var(--text);
+  min-height:46px;
+  padding:11px 14px;
 }
-
-.wt-br-note {
-  grid-column: 1 / -1;
-  font-size: 12px;
-  margin: 0;
+button{cursor:pointer}
+button:hover{border-color:var(--gold)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
+  outline:3px solid var(--gold);
+  outline-offset:3px;
 }
+header{
+  border-bottom:1px solid var(--line);
+  background:#141b15;
+  padding:18px max(18px,env(safe-area-inset-left));
+}
+.top{
+  max-width:1000px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+}
+.brand{font-weight:900;letter-spacing:1px}
+.brand span{color:var(--gold)}
+.brand small{
+  display:block;
+  font-size:10px;
+  color:var(--muted);
+  letter-spacing:3px;
+  margin-top:5px;
+}
+main{
+  max-width:1000px;
+  margin:auto;
+  padding:24px 18px calc(110px + env(safe-area-inset-bottom));
+}
+.eyebrow{
+  color:var(--gold);
+  font-size:11px;
+  letter-spacing:3px;
+  font-weight:800;
+}
+.hero{
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:26px;
+  background:
+    radial-gradient(ellipse at top right,#394b2d,transparent 70%),
+    repeating-linear-gradient(135deg,transparent 0 22px,#ffffff03 22px 23px),
+    var(--panel);
+}
+h1{
+  font-size:clamp(28px,6vw,46px);
+  line-height:1.1;
+  margin:15px 0;
+}
+h2{font-size:22px;margin:24px 0 14px}
+p{color:var(--muted);line-height:1.6}
+.hero p{max-width:530px}
+.gold{
+  background:var(--gold);
+  color:#151a12;
+  font-weight:800;
+  border-color:var(--gold);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.card,.notice{
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:16px;
+  padding:18px;
+}
+input,select{width:100%;min-width:0}
+.card{position:relative}
+.card h3{font-size:19px;margin:14px 0 8px}
+.badge{
+  display:inline-block;
+  color:var(--gold);
+  font-size:11px;
+  letter-spacing:1px;
+  border:1px solid var(--line);
+  padding:5px 8px;
+  border-radius:6px;
+}
+.symbol{font-size:30px;margin-top:14px;color:var(--muted)}
+.card p{font-size:13px;margin:8px 0 18px}
+.actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  justify-content:space-between;
+}
+.link{
+  color:var(--gold);
+  text-decoration:none;
+  font-size:14px;
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+}
+.star{font-size:23px;padding:5px 13px;color:var(--gold)}
+.star[aria-pressed="true"]{
+  background:#dfb96820;
+  border-color:var(--gold);
+}
+.notice{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+  margin-top:18px;
+}
+.empty{
+  grid-column:1 / -1;
+  text-align:center;
+  padding:30px;
+  border:1px dashed var(--line);
+  border-radius:16px;
+  color:var(--muted);
+}
+nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:#141b15f5;
+  border-top:1px solid var(--line);
+  padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  backdrop-filter:blur(12px);
+  z-index:5;
+}
+nav button{
+  border:0;
+  background:transparent;
+  flex:1;
+  max-width:170px;
+  padding:8px 4px;
+  font-size:11px;
+  color:var(--muted);
+}
+nav button span{
+  display:block;
+  font-size:21px;
+  margin-bottom:4px;
+}
+nav button[aria-current="page"]{
+  background:#dfb96815;
+  color:var(--gold);
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:32px;
+  line-height:1.7;
+}
+#status{color:var(--gold);font-size:13px}
+#status:empty{display:none}
+#vehicle-detail{
+  width:min(560px,calc(100% - 28px));
+  max-height:85dvh;
+  overflow-y:auto;
+  border:1px solid var(--gold);
+  border-radius:20px;
+  padding:24px;
+  background:var(--panel);
+  color:var(--text);
+}
+#vehicle-detail::backdrop{background:#000b}
+#vehicle-detail h2{margin:16px 0}
+#vehicle-detail table{width:100%;border-collapse:collapse}
+#vehicle-detail th,#vehicle-detail td{
+  padding:12px 4px;
+  border-bottom:1px solid var(--line);
+  text-align:left;
+  font-size:14px;
+}
+#vehicle-detail th{color:var(--muted);font-weight:500}
+#vehicle-detail td{text-align:right;overflow-wrap:anywhere}
+.detail-button{width:100%;margin-top:14px}
+.nation-card{text-align:left}
+.nation-card strong{display:block;font-size:21px;margin:12px 0}
+.nation-card span{font-size:12px;color:var(--muted)}
+.catalog-filters{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+.catalog-filters input{grid-column:1 / -1}
+.catalog-bar{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.catalog-bar button{margin-top:12px}
+#catalog-results{font-size:13px;color:var(--muted)}
+.catalog-br{color:var(--gold);font-size:20px;font-weight:800}
+.catalog-card h3{overflow-wrap:anywhere}
+button:disabled{opacity:.45;cursor:default}
 
-.wt-br-reset {
-  grid-column: 1 / -1;
+.wt-photo{
+  position:relative;
+  display:grid;
+  place-items:center;
+  height:170px;
+  margin:16px 0;
+  overflow:hidden;
+  border:1px solid #344437;
+  border-radius:12px;
+  background:radial-gradient(ellipse at center,#2b3a2e,#101710);
+}
+.wt-photo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:12px;
+  opacity:0;
+  transition:opacity .2s;
+}
+.wt-photo.ready img{opacity:1}
+.wt-photo span{
+  position:absolute;
+  padding:12px;
+  color:#abb8a9;
+  font-size:13px;
+  text-align:center;
+}
+.wt-photo.ready span{display:none}
+.wt-photo.failed img{display:none}
+#vehicle-detail .wt-photo{height:240px}
+
+.wt-compare-panel{
+  margin:18px 0;
+  padding:16px;
+  border:1px solid #344437;
+  border-radius:14px;
+  background:#172019;
+}
+.wt-compare-panel h2{margin:0 0 10px;font-size:20px}
+.wt-compare-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+.wt-compare-message{color:#abb8a9;font-size:13px}
+.wt-compare-pick{width:100%;margin-top:8px}
+.wt-compare-pick[aria-pressed="true"]{
+  border-color:#dfb968;
+  color:#dfb968;
+  background:#dfb96820;
+}
+#wt-compare-dialog{
+  width:min(760px,95vw);
+  max-height:88vh;
+  overflow:auto;
+  border:1px solid #344437;
+  border-radius:16px;
+  padding:20px;
+  background:#172019;
+  color:#edf2e9;
+}
+#wt-compare-dialog::backdrop{background:#000b}
+.wt-compare-scroll{overflow-x:auto}
+#wt-compare-dialog table{
+  width:100%;
+  min-width:440px;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+#wt-compare-dialog th,#wt-compare-dialog td{
+  padding:12px 8px;
+  border-bottom:1px solid #344437;
+  vertical-align:top;
+  text-align:left;
+  overflow-wrap:anywhere;
+}
+#wt-compare-dialog thead th{color:#dfb968}
+#wt-compare-dialog tbody th{color:#abb8a9;font-weight:500}
+
+.wt-lineup-pick{width:100%;margin-top:8px}
+.wt-lineup-pick[aria-pressed="true"]{
+  border-color:#dfb968;
+  color:#dfb968;
+}
+#wt-lineup-dialog{
+  width:min(680px,95vw);
+  max-height:88dvh;
+  overflow:auto;
+  padding:20px;
+  border:1px solid #dfb968;
+  border-radius:18px;
+  background:#172019;
+  color:#edf2e9;
+}
+#wt-lineup-dialog::backdrop{background:#000b}
+.wt-lineup-controls{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0;
+}
+.wt-lineup-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.wt-lineup-fields label{font-size:13px;color:#abb8a9}
+.wt-lineup-fields input,.wt-lineup-fields select{margin-top:6px}
+.wt-lineup-slot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 0;
+  border-bottom:1px solid #344437;
+}
+.wt-lineup-slot small{display:block;color:#abb8a9;margin-top:5px}
+.wt-lineup-result{
+  padding:16px;
+  margin:16px 0;
+  border:1px solid #344437;
+  border-radius:12px;
+  color:#dfb968;
+  font-size:22px;
+  font-weight:800;
+}
+#wt-lineup-message{color:#dfb968;font-size:13px}
+
+.wt-br-controls{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.wt-br-controls label{font-size:13px;color:var(--muted)}
+.wt-br-controls select{margin-top:6px}
+.wt-br-note{grid-column:1 / -1;font-size:12px;margin:0}
+.wt-br-reset{grid-column:1 / -1}
+
+@media(max-width:700px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .hero{padding:22px}
+  .brand{font-size:14px}
+}
+@media(max-width:420px){
+  .grid{grid-template-columns:1fr}
+  .wt-lineup-fields{grid-template-columns:1fr}
 }
 </style>
+</head>
 
+<body>
+<header>
+  <div class="top">
+    <div class="brand">
+      <span>WT</span> COMPANION
+      <small>MILITARY TACTICAL</small>
+    </div>
+    <button id="language" aria-label="Switch to English">EN</button>
+  </div>
+</header>
+
+<main>
+  <div id="content"></div>
+  <p id="status" role="status"></p>
+  <footer id="footer"></footer>
+</main>
+
+<nav id="navigation" aria-label="Navigation"></nav>
+<dialog id="vehicle-detail" aria-labelledby="detail-title"></dialog>
+
+<!-- KATALOG, NATIONEN, FAVORITEN UND DETAILS -->
 <script>
-(() => {
-  if (window.wtBRControls) return;
-  window.wtBRControls = true;
+"use strict";
 
-  const root = document.getElementById('content');
-  if (!root) return;
+let lang="de";
+try{
+  lang=localStorage.getItem("wt-language")==="en"?"en":"de";
+}catch{}
 
-  const t = (de, en) =>
-    document.documentElement.lang === 'en' ? en : de;
+const vehicles=[
+  {id:"bf109",name:"Bf 109 E-3",nation:"de",type:"air"},
+  {id:"fw190",name:"Fw 190 A-1",nation:"de",type:"air"},
+  {id:"p51",name:"P-51D-5",nation:"us",type:"air"},
+  {id:"p47",name:"P-47D-28",nation:"us",type:"air"},
+  {id:"spitfire",name:"Spitfire Mk Ia",nation:"gb",type:"air"},
+  {id:"yak",name:"Yak-1",nation:"su",type:"air"},
+  {id:"tiger",name:"Tiger H1",nation:"de",type:"ground"},
+  {id:"panther",name:"Panther D",nation:"de",type:"ground"},
+  {id:"sherman",name:"M4A1",nation:"us",type:"ground"},
+  {id:"chaffee",name:"M24",nation:"us",type:"ground"},
+  {id:"cromwell",name:"Cromwell V",nation:"gb",type:"ground"},
+  {id:"t34",name:"T-34 (1942)",nation:"su",type:"ground"}
+];
 
-  function read(key, fallback) {
-    try {
-      return JSON.parse(localStorage.getItem(key)) ?? fallback;
-    } catch {
-      return fallback;
-    }
+function escapeHTML(value){
+  return String(value).replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+}
+
+(()=>{
+const e="https://wtvehiclesapi.duckdns.org/api/vehicles";
+const t=864e5;
+
+const a={
+  germany:["Deutschland","Germany","🇩🇪"],
+  usa:["USA","USA","🇺🇸"],
+  britain:["Großbritannien","Great Britain","🇬🇧"],
+  ussr:["UdSSR","USSR","★"],
+  france:["Frankreich","France","🇫🇷"],
+  italy:["Italien","Italy","🇮🇹"],
+  japan:["Japan","Japan","🇯🇵"],
+  china:["China","China","🇨🇳"],
+  sweden:["Schweden","Sweden","🇸🇪"],
+  israel:["Israel","Israel","🇮🇱"]
+};
+
+const n={
+  all:["Alle Fahrzeuge","All vehicles"],
+  air:["Flugzeuge","Aircraft"],
+  heli:["Hubschrauber","Helicopters"],
+  ground:["Bodenfahrzeuge","Ground vehicles"],
+  blue:["Hochseeflotte","Bluewater fleet"],
+  coast:["Küstenflotte","Coastal fleet"],
+  other:["Weitere Typen","Other types"]
+};
+
+const r={
+  bf109:"bf-109e-3",
+  fw190:"fw-190a-1",
+  p51:"p-51d-5",
+  p47:"p-47d-28",
+  spitfire:"spitfire_mk1",
+  yak:"yak-1_early",
+  tiger:"germ_pzkpfw_VI_ausf_h1_tiger",
+  panther:"germ_pzkpfw_V_ausf_d_panther",
+  sherman:"us_m4a1_1942_sherman",
+  chaffee:"us_m24_chaffee",
+  cromwell:"uk_a27m_cromwell_5",
+  t34:"ussr_t_34_1942"
+};
+
+const i=(de,en)=>lang==="de"?de:en;
+const o=country=>a[country]?.[lang==="de"?0:1]||country;
+const s=category=>n[category][lang==="de"?0:1];
+const l=escapeHTML;
+
+function c(key,fallback){
+  try{
+    return JSON.parse(localStorage.getItem(key))??fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+let d=false;
+
+function u(key,value){
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
+  }catch{
+    d=true;
+  }
+}
+
+const g=c("wt-favorites",[]);
+
+const h=new Set(
+  Array.isArray(g)?
+  g.filter(id=>typeof id==="string").map(id=>r[id]||id):[]
+);
+
+let m=c("wt-snapshots",{});
+
+if(!m||Array.isArray(m)||typeof m!=="object"){
+  m={};
+}
+
+vehicles.forEach(vehicle=>{
+  const id=r[vehicle.id];
+
+  if(id&&h.has(id)&&!m[id]){
+    m[id]={
+      id,
+      country:{
+        de:"germany",
+        us:"usa",
+        gb:"britain",
+        su:"ussr"
+      }[vehicle.nation],
+      category:vehicle.type,
+      name:vehicle.name,
+      rank:null,
+      ab:null,
+      rb:null,
+      sb:null
+    };
+  }
+});
+
+u("wt-favorites",[...h]);
+u("wt-snapshots",m);
+
+let p="nations";
+let f="germany";
+let b="all";
+let y="";
+let v="all";
+let w="rb";
+let _=60;
+let $=false;
+let k="";
+let S=0;
+let A=[];
+let E=0;
+
+const B={};
+const I={};
+const L={};
+
+const T=document.getElementById("content");
+const C=document.getElementById("vehicle-detail");
+
+function F(type){
+  if(["fighter","assault","bomber"].includes(type)){
+    return "air";
   }
 
-  const saved = read('wt-br-range-v1', {});
-
-  const valid = value =>
-    typeof value === 'number' &&
-    Number.isFinite(value) &&
-    value >= 0;
-
-  let minimum = valid(saved?.minimum)
-    ? saved.minimum
-    : null;
-
-  let maximum = valid(saved?.maximum)
-    ? saved.maximum
-    : null;
-
-  if (
-    minimum !== null &&
-    maximum !== null &&
-    minimum > maximum
-  ) {
-    maximum = minimum;
+  if(["attack_helicopter","utility_helicopter"].includes(type)){
+    return "heli";
   }
 
-  window.wtBRFilter = (vehicle, mode) => {
-    if (minimum === null && maximum === null) {
-      return true;
-    }
+  if([
+    "tank","light_tank","medium_tank","heavy_tank",
+    "tank_destroyer","spaa","lbv","mbv","hbv","exoskeleton"
+  ].includes(type)){
+    return "ground";
+  }
 
-    const value = vehicle[mode];
+  if([
+    "destroyer","light_cruiser","heavy_cruiser",
+    "battlecruiser","battleship","ship"
+  ].includes(type)){
+    return "blue";
+  }
 
-    return valid(value) &&
-      (minimum === null || value >= minimum) &&
-      (maximum === null || value <= maximum);
+  if(["boat","heavy_boat","barge","frigate"].includes(type)){
+    return "coast";
+  }
+
+  return "other";
+}
+
+function R(vehicle){
+  return{
+    id:vehicle.identifier,
+    country:vehicle.country,
+    category:F(vehicle.vehicle_type),
+    rank:vehicle.era,
+    ab:vehicle.arcade_br,
+    rb:vehicle.realistic_br,
+    sb:vehicle.simulator_br,
+    grb:vehicle.realistic_ground_br,
+    gsb:vehicle.simulator_ground_br,
+    premium:Boolean(vehicle.is_premium||vehicle.is_pack),
+    event:Boolean(vehicle.event),
+    crew:vehicle.crew_total_count,
+    hull:vehicle.hull_armor,
+    turret:vehicle.turret_armor
   };
+}
 
-  function save() {
-    try {
-      localStorage.setItem(
-        'wt-br-range-v1',
-        JSON.stringify({ minimum, maximum })
+function D(vehicle){
+  const key=vehicle.id.toLowerCase()+"_short";
+
+  return L[lang]?.vehicles?.[key]||
+    L.en?.vehicles?.[key]||
+    vehicle.name||
+    vehicle.id;
+}
+
+function z(value){
+  return typeof value==="number"&&Number.isFinite(value)?
+    value.toFixed(1):"—";
+}
+
+function M(vehicle){
+  return "https://wiki.warthunder.com/unit/"+
+    encodeURIComponent(vehicle.id);
+}
+
+async function j(url){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),25000);
+
+  try{
+    const response=await fetch(url,{
+      signal:controller.signal
+    });
+
+    if(!response.ok){
+      throw new Error(
+        response.status===429?
+        i(
+          "Anfragelimit erreicht. Bitte später erneut versuchen.",
+          "Request limit reached. Please try later."
+        ):
+        "HTTP "+response.status
       );
-    } catch {}
-  }
-
-  function apply() {
-    save();
-    refresh();
-
-    root.querySelector('#catalog-search')?.dispatchEvent(
-      new Event('input', { bubbles: true })
-    );
-  }
-
-  let lastMarkup = '';
-
-  function refresh() {
-    const filters = root.querySelector('.catalog-filters');
-    if (!filters) return;
-
-    let controls = filters.querySelector('.wt-br-controls');
-
-    if (!controls) {
-      controls = document.createElement('div');
-      controls.className = 'wt-br-controls';
-      filters.append(controls);
-      lastMarkup = '';
     }
 
-    const mode =
-      root.querySelector('#choose-mode')?.value || 'rb';
+    return await response.json();
+  }finally{
+    clearTimeout(timer);
+  }
+}
 
-    const values = [];
+async function x(language){
+  const key="wt-names-v1-"+language;
+  const cached=c(key,null);
 
-    const countries = [
-      'germany',
-      'usa',
-      'britain',
-      'ussr',
-      'france',
-      'italy',
-      'japan',
-      'china',
-      'sweden',
-      'israel'
-    ];
+  if(cached?.data){
+    L[language]=cached.data;
 
-    for (const country of countries) {
-      const data = read('wt-country-v1-' + country, null);
+    if(Date.now()-cached.at<t){
+      return;
+    }
+  }
 
-      if (Array.isArray(data?.items)) {
-        data.items.forEach(vehicle => {
-          if (valid(vehicle[mode])) {
-            values.push(vehicle[mode]);
-          }
-        });
+  try{
+    const data=await j(
+      "https://raw.githubusercontent.com/"+
+      "Sgambe33/WT-Vehicle-Data-Extract/"+
+      "master/locales/"+language+".json"
+    );
+
+    if(!data.vehicles){
+      throw new Error("Names");
+    }
+
+    L[language]={
+      vehicles:data.vehicles,
+      weapons:data.weapons||{}
+    };
+
+    u(key,{
+      at:Date.now(),
+      data:L[language]
+    });
+  }catch{}
+
+  if(p!=="nations"&&p!=="info"){
+    H();
+  }
+}
+
+async function G(country){
+  if(!a[country])return;
+
+  f=country;
+  p="catalog";
+  b="all";
+  y="";
+  v="all";
+  _=60;
+  $=true;
+  k="";
+  A=[];
+  S=0;
+
+  N();
+
+  try{
+    const data=await loadCountry(country);
+
+    if(f!==country||p!=="catalog")return;
+
+    A=data.items;
+    S=data.at;
+
+    if(data.stale){
+      k=i(
+        "Quelle nicht erreichbar. Letzter gespeicherter Stand wird angezeigt.",
+        "Source unavailable. Showing last saved data."
+      );
+    }
+
+    A.forEach(vehicle=>{
+      if(h.has(vehicle.id)){
+        m[vehicle.id]={
+          ...vehicle,
+          name:D(vehicle)
+        };
+      }
+    });
+
+    u("wt-snapshots",m);
+  }catch(error){
+    if(f!==country||p!=="catalog")return;
+
+    k=i("Laden fehlgeschlagen: ","Loading failed: ")+
+      error.message;
+  }finally{
+    if(f===country&&p==="catalog"){
+      $=false;
+      H();
+    }
+  }
+}
+
+async function loadCountry(country){
+  if(I[country]){
+    return I[country];
+  }
+
+  I[country]=(async()=>{
+    const cached=B[country]||
+      c("wt-country-v1-"+country,null);
+
+    if(cached?.items?.length&&Date.now()-cached.at<t){
+      B[country]=cached;
+      return cached;
+    }
+
+    const items=[];
+    let finished=false;
+
+    try{
+      for(let page=0;page<50;page++){
+        const batch=await j(
+          e+"?country="+encodeURIComponent(country)+
+          "&limit=200&page="+page+
+          "&excludeKillstreak=true"+
+          "&excludeEventVehicles=true"
+        );
+
+        if(
+          !Array.isArray(batch)||
+          batch.some(vehicle=>
+            typeof vehicle.identifier!=="string"||
+            vehicle.country!==country
+          )
+        ){
+          throw new Error(i(
+            "Unerwartetes Datenformat.",
+            "Unexpected data format."
+          ));
+        }
+
+        items.push(...batch.map(R));
+
+        if(f===country&&p==="catalog"){
+          document.getElementById("catalog-results").textContent=
+            i("Lade Fahrzeuge: ","Loading vehicles: ")+
+            items.length;
+        }
+
+        if(batch.length<200){
+          finished=true;
+          break;
+        }
+      }
+
+      if(!finished){
+        throw new Error(i(
+          "Katalog zu groß; Laden abgebrochen.",
+          "Catalog too large; loading stopped."
+        ));
+      }
+
+      const result={
+        at:Date.now(),
+        items:[
+          ...new Map(items.map(vehicle=>[
+            vehicle.id,vehicle
+          ])).values()
+        ]
+      };
+
+      B[country]=result;
+      u("wt-country-v1-"+country,result);
+
+      return result;
+    }catch(error){
+      if(cached?.items?.length){
+        B[country]=cached;
+        return {...cached,stale:true};
+      }
+
+      throw error;
+    }
+  })();
+
+  try{
+    return await I[country];
+  }finally{
+    delete I[country];
+  }
+}
+
+function N(){
+  document.documentElement.lang=lang;
+
+  document.getElementById("language").textContent=
+    lang==="de"?"EN":"DE";
+
+  document.getElementById("language").setAttribute(
+    "aria-label",
+    i("Switch to English","Auf Deutsch wechseln")
+  );
+
+  const pages=[
+    ["nations","⚑",i("Nationen","Nations")],
+    ["catalog","▦",i("Katalog","Catalog")],
+    ["favorites","★",i("Favoriten","Favorites")],
+    ["info","ⓘ","Info"]
+  ];
+
+  document.getElementById("navigation").innerHTML=
+    pages.map(([page,icon,title])=>`
+      <button data-view="${page}"
+        ${p===page?'aria-current="page"':""}>
+        <span aria-hidden="true">${icon}</span>
+        ${title}
+      </button>
+    `).join("");
+
+  document.getElementById("footer").textContent=i(
+    "Inoffizielles Fanprojekt · Daten: WT Vehicles API / Sgambe33",
+    "Unofficial fan project · Data: WT Vehicles API / Sgambe33"
+  );
+
+  document.getElementById("status").textContent=d?i(
+    "Browser-Speicher voll oder blockiert. Änderungen können beim Schließen verloren gehen.",
+    "Browser storage full or blocked. Changes may be lost when closing."
+  ):"";
+
+  if(p==="nations"){
+    T.innerHTML=`
+      <section class="hero">
+        <div class="eyebrow">
+          MILITARY TACTICAL / NATIONS
+        </div>
+
+        <h1>${i(
+          "Wähle deine Nation.",
+          "Choose your nation."
+        )}</h1>
+
+        <p>${i(
+          "Danach siehst du die Fahrzeuge ihres Forschungsbaums, einschließlich Premium- und Eventfahrzeugen aus der Datenquelle.",
+          "Explore its research nation, including premium and event vehicles available in the data source."
+        )}</p>
+      </section>
+
+      <h2>${i(
+        "Forschungsnationen",
+        "Research nations"
+      )}</h2>
+
+      <div class="grid">
+        ${Object.keys(a).map(country=>`
+          <button class="card nation-card"
+            data-country="${country}">
+            <div class="symbol" aria-hidden="true">
+              ${a[country][2]}
+            </div>
+            <strong>${o(country)}</strong>
+            <span>${i(
+              "Fahrzeuge ansehen →",
+              "View vehicles →"
+            )}</span>
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    return;
+  }
+
+  if(p==="info"){
+    T.innerHTML=`
+      <h1>${i(
+        "Über den Katalog",
+        "About the catalog"
+      )}</h1>
+
+      <div class="notice">${i(
+        "Der Katalog lädt alle von der Community-Quelle zurückgegebenen Fahrzeuge pro Forschungsnation. Testfahrzeuge und bestimmte Sondermodi sind ausgeschlossen. Vollständigkeit und Aktualität hängen vom Anbieter ab. Keine offizielle Gaijin-API.",
+        "The catalog loads all vehicles returned by the community source for each research nation. Test vehicles and certain special modes are excluded. Coverage and freshness depend on the provider. Not an official Gaijin API."
+      )}</div>
+
+      <div class="notice">${i(
+        "Geladene Länder und Namen werden für 24 Stunden gespeichert und beim nächsten Öffnen nach Ablauf erneut angefragt. Favoriten bleiben lokal auf diesem Gerät. Ohne gespeicherten Katalog ist Internet nötig.",
+        "Loaded nations and names are cached for 24 hours and requested again on the next visit after expiry. Favorites stay on this device. Internet is needed without a cached catalog."
+      )}</div>
+
+      <p>
+        <a class="link"
+          href="https://github.com/Sgambe33/WarThunder-Vehicles-API"
+          target="_blank"
+          rel="noopener noreferrer">
+          WT Vehicles API / Sgambe33 ↗
+        </a>
+      </p>
+
+      <p>
+        <a class="link"
+          href="https://github.com/Sgambe33/WT-Vehicle-Data-Extract"
+          target="_blank"
+          rel="noopener noreferrer">
+          ${i(
+            "Namensdaten & Quelle (GPL-3.0) ↗",
+            "Name data & source (GPL-3.0) ↗"
+          )}
+        </a>
+      </p>
+    `;
+
+    return;
+  }
+
+  T.innerHTML=`
+    <div class="eyebrow">VEHICLE CATALOG</div>
+
+    <h1>${p==="favorites"?
+      i("Deine Favoriten","Your favorites"):
+      o(f)
+    }</h1>
+
+    <div class="catalog-filters">
+      ${p==="catalog"?`
+        <select id="choose-country"
+          aria-label="Nation">
+          ${Object.keys(a).map(country=>`
+            <option value="${country}"
+              ${country===f?"selected":""}>
+              ${o(country)}
+            </option>
+          `).join("")}
+        </select>
+      `:""}
+
+      <select id="choose-category"
+        aria-label="${i(
+          "Fahrzeugbereich",
+          "Vehicle category"
+        )}">
+        ${Object.keys(n).map(category=>`
+          <option value="${category}"
+            ${category===b?"selected":""}>
+            ${s(category)}
+          </option>
+        `).join("")}
+      </select>
+
+      <select id="choose-rank"
+        aria-label="${i("Rang","Rank")}">
+        <option value="all">
+          ${i("Alle Ränge","All ranks")}
+        </option>
+
+        ${Array.from({length:9},(_,index)=>index+1)
+          .map(rank=>`
+            <option value="${rank}"
+              ${v===String(rank)?"selected":""}>
+              ${i("Rang","Rank")} ${rank}
+            </option>
+          `).join("")}
+      </select>
+
+      <select id="choose-mode"
+        aria-label="${i("Spielmodus","Game mode")}">
+        ${[
+          ["ab","Arcade"],
+          ["rb",i("Realistisch","Realistic")],
+          ["sb","Simulator"]
+        ].map(([mode,title])=>`
+          <option value="${mode}"
+            ${w===mode?"selected":""}>
+            ${title}
+          </option>
+        `).join("")}
+      </select>
+
+      <input id="catalog-search"
+        type="search"
+        value="${l(y)}"
+        placeholder="${i(
+          "Fahrzeug suchen …",
+          "Search vehicles …"
+        )}"
+        aria-label="${i(
+          "Fahrzeug suchen",
+          "Search vehicles"
+        )}">
+    </div>
+
+    <p id="catalog-results" role="status"></p>
+    <div class="grid" id="catalog-cards"></div>
+    <div id="catalog-more" class="catalog-bar"></div>
+  `;
+
+  document.getElementById("choose-country")
+    ?.addEventListener("change",event=>{
+      G(event.target.value);
+    });
+
+  const settings=[
+    ["choose-category",value=>b=value],
+    ["choose-rank",value=>v=value],
+    ["choose-mode",value=>w=value]
+  ];
+
+  for(const[id,setValue]of settings){
+    document.getElementById(id)
+      .addEventListener("change",event=>{
+        setValue(event.target.value);
+        _=60;
+        H();
+      });
+  }
+
+  document.getElementById("catalog-search")
+    .addEventListener("input",event=>{
+      y=event.target.value;
+      _=60;
+      H();
+    });
+
+  H();
+}
+
+function H(){
+  if(!["catalog","favorites"].includes(p))return;
+
+  const list=p==="favorites"?
+    [...h].map(id=>m[id]||{
+      id,
+      name:id,
+      category:"other",
+      country:"",
+      rank:null
+    }):
+    A;
+
+  const query=y.toLocaleLowerCase()
+    .replace(/[\s_-]+/g,"");
+
+  const filtered=list.filter(vehicle=>
+    (!window.wtBRFilter||window.wtBRFilter(vehicle,w))&&
+    (b==="all"||vehicle.category===b)&&
+    (v==="all"||String(vehicle.rank)===v)&&
+    (D(vehicle)+" "+vehicle.id)
+      .toLocaleLowerCase()
+      .replace(/[\s_-]+/g,"")
+      .includes(query)
+  ).sort((first,second)=>
+    (first.rank||0)-(second.rank||0)||
+    D(first).localeCompare(D(second))
+  );
+
+  document.getElementById("catalog-results").textContent=
+    $&&p==="catalog"?
+      i("Katalog wird geladen …","Loading catalog …"):
+    k&&p==="catalog"?
+      k:
+      filtered.length+" "+i("Treffer","results")+
+      (S&&p==="catalog"?
+        " · "+i("Abgerufen: ","Retrieved: ")+
+        new Date(S).toLocaleString(
+          lang==="de"?"de-DE":"en-GB"
+        ):
+        "");
+
+  document.getElementById("catalog-cards").innerHTML=
+    filtered.slice(0,_).map(vehicle=>`
+      <article class="card catalog-card">
+        <span class="badge">
+          ${l(o(vehicle.country))} · ${s(vehicle.category)}
+          ${vehicle.premium?" · PREMIUM":""}
+          ${vehicle.event?" · EVENT":""}
+        </span>
+
+        <h3>${l(D(vehicle))}</h3>
+
+        <p>
+          ${i("Rang","Rank")} ${vehicle.rank||"—"}
+          · ${w.toUpperCase()}
+        </p>
+
+        <div class="catalog-br">
+          BR ${z(vehicle[w])}
+        </div>
+
+        <div class="actions">
+          <a class="link"
+            href="${M(vehicle)}"
+            target="_blank"
+            rel="noopener noreferrer">
+            Wiki ↗
+          </a>
+
+          <button class="star"
+            data-star="${l(vehicle.id)}"
+            aria-pressed="${h.has(vehicle.id)}"
+            aria-label="${i(
+              "Favorit umschalten: ",
+              "Toggle favorite: "
+            )+l(D(vehicle))}">
+            ${h.has(vehicle.id)?"★":"☆"}
+          </button>
+        </div>
+
+        <button class="detail-button gold"
+          data-inspect="${l(vehicle.id)}">
+          ${i(
+            "Fahrzeugdetails →",
+            "Vehicle details →"
+          )}
+        </button>
+      </article>
+    `).join("")||
+    ($?"":`
+      <div class="empty">
+        ${i(
+          "Keine passenden Fahrzeuge.",
+          "No matching vehicles."
+        )}
+      </div>
+    `);
+
+  document.getElementById("catalog-more").innerHTML=
+    !k||p!=="catalog"||$||A.length?
+      filtered.length>_?`
+        <button data-more>
+          ${i(
+            "Weitere Fahrzeuge laden",
+            "Show more vehicles"
+          )}
+          (${Math.min(60,filtered.length-_)})
+        </button>
+      `:"":
+      `<button data-retry>
+        ${i("Erneut versuchen","Try again")}
+      </button>`;
+}
+
+C.addEventListener("close",()=>{
+  ++E;
+});
+
+document.getElementById("language")
+  .addEventListener("click",()=>{
+    lang=lang==="de"?"en":"de";
+
+    try{
+      localStorage.setItem("wt-language",lang);
+    }catch{
+      d=true;
+    }
+
+    N();
+    x(lang);
+  });
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest(
+    "[data-country],[data-view],[data-star],"+
+    "[data-inspect],[data-more],[data-retry]"
+  );
+
+  if(!button)return;
+
+  if(button.dataset.country){
+    G(button.dataset.country);
+    return;
+  }
+
+  if(button.dataset.view){
+    const page=button.dataset.view;
+
+    if(page==="catalog"){
+      G(f);
+    }else{
+      p=page;
+      $=false;
+      b="all";
+      v="all";
+      y="";
+      _=60;
+
+      N();
+      window.scrollTo({top:0});
+    }
+
+    return;
+  }
+
+  if(button.hasAttribute("data-retry")){
+    G(f);
+    return;
+  }
+
+  if(button.hasAttribute("data-more")){
+    _+=60;
+    H();
+    return;
+  }
+
+  if(button.dataset.inspect){
+    showDetails(button.dataset.inspect);
+    return;
+  }
+
+  const id=button.dataset.star;
+
+  if(id){
+    if(h.has(id)){
+      h.delete(id);
+    }else{
+      h.add(id);
+
+      const vehicle=A.find(item=>item.id===id)||m[id];
+
+      if(vehicle){
+        m[id]={
+          ...vehicle,
+          name:D(vehicle)
+        };
       }
     }
 
-    const snapshots = read('wt-snapshots', {});
+    u("wt-favorites",[...h]);
+    u("wt-snapshots",m);
 
-    if (snapshots && typeof snapshots === 'object') {
-      Object.values(snapshots).forEach(vehicle => {
-        if (vehicle && valid(vehicle[mode])) {
+    if(p==="favorites"){
+      H();
+    }else{
+      button.textContent=h.has(id)?"★":"☆";
+      button.setAttribute(
+        "aria-pressed",
+        String(h.has(id))
+      );
+    }
+
+    document.getElementById("status").textContent=d?i(
+      "Speichern auf diesem Gerät nicht möglich.",
+      "Saving on this device is unavailable."
+    ):"";
+  }
+});
+
+async function showDetails(id){
+  const request=++E;
+  const snapshot=A.find(vehicle=>vehicle.id===id)||
+    m[id]||{id};
+
+  let details=null;
+
+  function renderDetails(message=""){
+    const vehicle=details||snapshot;
+    const full=Boolean(details);
+
+    const aircraft=full?
+      F(vehicle.vehicle_type)==="air":
+      snapshot.category==="air";
+
+    const rows=[
+      [
+        i("Nation","Nation"),
+        o(vehicle.country||snapshot.country||"")
+      ],
+      [
+        i("Rang","Rank"),
+        full?vehicle.era:vehicle.rank
+      ],
+      [
+        "BR · "+
+          (aircraft?
+            i("Luft","Air"):
+            i("Boden/Flotte","Ground/Fleet"))+
+          " · AB",
+        z(full?vehicle.arcade_br:vehicle.ab)
+      ],
+      [
+        "BR · RB",
+        z(full?vehicle.realistic_br:vehicle.rb)
+      ],
+      [
+        "BR · SB",
+        z(full?vehicle.simulator_br:vehicle.sb)
+      ]
+    ];
+
+    const groundRB=full?
+      vehicle.realistic_ground_br:vehicle.grb;
+
+    const groundSB=full?
+      vehicle.simulator_ground_br:vehicle.gsb;
+
+    const standardRB=full?
+      vehicle.realistic_br:vehicle.rb;
+
+    const standardSB=full?
+      vehicle.simulator_br:vehicle.sb;
+
+    if(aircraft&&groundRB!==standardRB){
+      rows.push([
+        "BR · "+i("Boden-RB","Ground RB"),
+        z(groundRB)
+      ]);
+    }
+
+    if(aircraft&&groundSB!==standardSB){
+      rows.push([
+        "BR · "+i("Boden-SB","Ground SB"),
+        z(groundSB)
+      ]);
+    }
+
+    const crew=full?
+      vehicle.crew_total_count:vehicle.crew;
+
+    if(crew){
+      rows.push([i("Besatzung","Crew"),crew]);
+    }
+
+    for(const[key,title]of[
+      ["hull_armor",i("Wanne F/S/H","Hull F/S/R")],
+      ["turret_armor",i("Turm F/S/H","Turret F/S/R")]
+    ]){
+      const armor=full?
+        vehicle[key]:
+        vehicle[key==="hull_armor"?"hull":"turret"];
+
+      if(Array.isArray(armor)&&armor.length){
+        rows.push([title,armor.join(" / ")+" mm"]);
+      }
+    }
+
+    if(full){
+      if(vehicle.mass){
+        rows.push([
+          i("Masse","Mass"),
+          (vehicle.mass/1000).toLocaleString(
+            lang==="de"?"de-DE":"en-GB"
+          )+" t"
+        ]);
+      }
+
+      for(const[key,mode]of[
+        ["max_speed_ab","AB"],
+        ["max_speed_rb_sb","RB/SB"]
+      ]){
+        if(typeof vehicle.engine?.[key]==="number"){
+          rows.push([
+            i("Geschwindigkeit · ","Speed · ")+mode,
+            vehicle.engine[key]+" km/h"
+          ]);
+        }
+      }
+
+      if(Array.isArray(vehicle.weapons)){
+        vehicle.weapons.forEach(weapon=>{
+          const key=weapon.name.toLowerCase();
+
+          rows.push([
+            i("Bewaffnung","Armament"),
+            (weapon.count||1)+" × "+
+              (L[lang]?.weapons?.[key]||
+               L.en?.weapons?.[key]||
+               weapon.name)
+          ]);
+        });
+      }
+
+      rows.push([
+        i("Datenversion","Data version"),
+        vehicle.version||"—"
+      ]);
+    }
+
+    C.innerHTML=`
+      <button id="close-catalog-detail" autofocus>
+        ${i("Schließen","Close")} ✕
+      </button>
+
+      <h2 id="detail-title">
+        ${l(D(snapshot))}
+      </h2>
+
+      <table>
+        <tbody>
+          ${rows.map(([title,value])=>`
+            <tr>
+              <th scope="row">${l(title)}</th>
+              <td>${l(value??"—")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+
+      <p role="status" class="notice">
+        ${l(message||i(
+          "Community-Daten. Fehlende Werte werden nicht ergänzt. Modus und Ausbau können Werte beeinflussen.",
+          "Community data. Missing values are not invented. Mode and modifications can affect values."
+        ))}
+      </p>
+
+      <a class="link"
+        href="${M(snapshot)}"
+        target="_blank"
+        rel="noopener noreferrer">
+        ${i("Offizielles Wiki ↗","Official wiki ↗")}
+      </a>
+    `;
+
+    document.getElementById("close-catalog-detail")
+      .onclick=()=>{
+        ++E;
+        C.close();
+      };
+  }
+
+  renderDetails(i(
+    "Weitere Details werden geladen …",
+    "Loading further details …"
+  ));
+
+  C.showModal();
+
+  const key="wt-detail-v1-"+id;
+  const cached=c(key,null);
+
+  try{
+    details=cached&&Date.now()-cached.at<t?
+      cached.data:
+      await j(e+"/"+encodeURIComponent(id));
+
+    if(details.identifier!==id){
+      throw new Error("Data");
+    }
+
+    if(!cached||details!==cached.data){
+      u(key,{
+        at:Date.now(),
+        data:details
+      });
+    }
+
+    if(request===E&&C.open){
+      renderDetails();
+    }
+  }catch{
+    details=cached?.data||null;
+
+    if(request===E&&C.open){
+      renderDetails(i(
+        "Detailquelle nicht erreichbar. Verfügbare gespeicherte Werte werden angezeigt.",
+        "Detail source unavailable. Showing available cached values."
+      ));
+    }
+  }
+}
+
+N();
+x("en");
+
+if(lang!=="en"){
+  x(lang);
+}
+})();
+</script>
+
+<!-- FAHRZEUGBILDER -->
+<script>
+(()=>{
+if(window.wtVehicleImages)return;
+window.wtVehicleImages=true;
+
+const root=document.getElementById("content");
+const detail=document.getElementById("vehicle-detail");
+
+if(!root||!detail)return;
+
+const t=(de,en)=>
+  document.documentElement.lang==="en"?en:de;
+
+function addImage(container,id,name,before){
+  if(!id||container.querySelector(".wt-photo")){
+    return;
+  }
+
+  const wrapper=document.createElement("div");
+  wrapper.className="wt-photo";
+
+  const image=document.createElement("img");
+  image.alt=name;
+  image.loading=container===detail?"eager":"lazy";
+  image.decoding="async";
+  image.referrerPolicy="no-referrer";
+
+  const message=document.createElement("span");
+  message.textContent=t(
+    "Bild wird geladen …",
+    "Loading image …"
+  );
+
+  image.addEventListener("load",()=>{
+    wrapper.classList.add("ready");
+  });
+
+  image.addEventListener("error",()=>{
+    wrapper.classList.add("failed");
+    message.textContent=t(
+      "Kein Bild verfügbar",
+      "Image unavailable"
+    );
+  });
+
+  image.src=
+    "https://wtvehiclesapi.duckdns.org/assets/images/"+
+    encodeURIComponent(id.toLowerCase())+".png";
+
+  wrapper.append(image,message);
+  container.insertBefore(wrapper,before);
+}
+
+function refresh(){
+  root.querySelectorAll(".catalog-card")
+    .forEach(card=>{
+      const button=card.querySelector("[data-inspect]");
+      const title=card.querySelector("h3");
+
+      if(button&&title){
+        addImage(
+          card,
+          button.dataset.inspect,
+          title.textContent,
+          title
+        );
+      }
+    });
+
+  const title=detail.querySelector("#detail-title");
+  const wiki=detail.querySelector(
+    'a[href*="wiki.warthunder.com/unit/"]'
+  );
+
+  if(title&&wiki){
+    try{
+      const url=new URL(wiki.href);
+      const id=decodeURIComponent(
+        url.pathname.split("/").pop()
+      );
+
+      addImage(
+        detail,
+        id,
+        title.textContent,
+        title.nextSibling
+      );
+    }catch{}
+  }
+}
+
+const observer=new MutationObserver(refresh);
+
+observer.observe(root,{
+  childList:true,
+  subtree:true
+});
+
+observer.observe(detail,{
+  childList:true,
+  subtree:true
+});
+
+refresh();
+})();
+</script>
+
+<!-- FAHRZEUGVERGLEICH -->
+<script>
+(()=>{
+if(window.wtVehicleCompare)return;
+window.wtVehicleCompare=true;
+
+const root=document.getElementById("content");
+if(!root)return;
+
+const t=(de,en)=>
+  document.documentElement.lang==="en"?en:de;
+
+const esc=value=>String(value??"—")
+  .replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+
+function read(key,fallback){
+  try{
+    return JSON.parse(localStorage.getItem(key))??fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+let selected=read("wt-compare-selection",[]);
+
+if(!Array.isArray(selected)){
+  selected=[];
+}
+
+selected=selected.filter(vehicle=>
+  vehicle&&
+  typeof vehicle.id==="string"&&
+  typeof vehicle.name==="string"
+).slice(0,2);
+
+const panel=document.createElement("section");
+panel.className="wt-compare-panel";
+root.before(panel);
+
+const dialog=document.createElement("dialog");
+dialog.id="wt-compare-dialog";
+dialog.setAttribute(
+  "aria-labelledby",
+  "wt-compare-title"
+);
+document.body.append(dialog);
+
+let requestId=0;
+let lastMarkup="";
+
+const countries={
+  germany:["Deutschland","Germany"],
+  usa:["USA","USA"],
+  britain:["Großbritannien","Great Britain"],
+  ussr:["UdSSR","USSR"],
+  france:["Frankreich","France"],
+  italy:["Italien","Italy"],
+  japan:["Japan","Japan"],
+  china:["China","China"],
+  sweden:["Schweden","Sweden"],
+  israel:["Israel","Israel"]
+};
+
+function name(vehicle){
+  const language=
+    document.documentElement.lang==="en"?"en":"de";
+
+  const names=read(
+    "wt-names-v1-"+language,null
+  )?.data?.vehicles;
+
+  return names?.[vehicle.id.toLowerCase()+"_short"]||
+    vehicle.name;
+}
+
+function refresh(){
+  const markup=`
+    <h2>${t(
+      "Fahrzeugvergleich",
+      "Vehicle comparison"
+    )}</h2>
+
+    <p class="wt-compare-message">${t(
+      "Wähle zwei Fahrzeuge in den Karten. Du kannst dabei die Nation wechseln.",
+      "Select two vehicles on their cards. You can switch nations between selections."
+    )}</p>
+
+    <div class="wt-compare-controls">
+      ${selected.map(vehicle=>`
+        <button
+          data-compare-remove="${esc(vehicle.id)}"
+          aria-label="${esc(
+            t("Entfernen: ","Remove: ")+name(vehicle)
+          )}">
+          ${esc(name(vehicle))} ×
+        </button>
+      `).join("")}
+
+      <button class="gold" data-compare-open
+        ${selected.length!==2?"disabled":""}>
+        ${t("Vergleichen","Compare")}
+        (${selected.length}/2)
+      </button>
+    </div>
+  `;
+
+  if(markup!==lastMarkup){
+    lastMarkup=markup;
+    panel.innerHTML=markup;
+  }
+
+  root.querySelectorAll(".catalog-card")
+    .forEach(card=>{
+      const detail=card.querySelector("[data-inspect]");
+      if(!detail)return;
+
+      const id=detail.dataset.inspect;
+
+      let button=card.querySelector(
+        "[data-compare-pick]"
+      );
+
+      if(!button){
+        button=document.createElement("button");
+        button.className="wt-compare-pick";
+        button.dataset.comparePick=id;
+        card.append(button);
+      }
+
+      const active=selected.some(vehicle=>
+        vehicle.id===id
+      );
+
+      const text=active?
+        t(
+          "✓ Für Vergleich ausgewählt",
+          "✓ Selected for comparison"
+        ):
+        t(
+          "+ Zum Vergleich",
+          "+ Add to comparison"
+        );
+
+      if(button.textContent!==text){
+        button.textContent=text;
+      }
+
+      if(button.getAttribute("aria-pressed")!==String(active)){
+        button.setAttribute(
+          "aria-pressed",
+          String(active)
+        );
+      }
+
+      const disabled=!active&&selected.length===2;
+
+      if(button.disabled!==disabled){
+        button.disabled=disabled;
+      }
+    });
+}
+
+async function loadDetails(vehicle){
+  const key="wt-detail-v1-"+vehicle.id;
+  const cached=read(key,null);
+
+  if(
+    cached?.data?.identifier===vehicle.id&&
+    Date.now()-cached.at<864e5
+  ){
+    return{data:cached.data};
+  }
+
+  const controller=new AbortController();
+  const timer=setTimeout(
+    ()=>controller.abort(),
+    25000
+  );
+
+  try{
+    const response=await fetch(
+      "https://wtvehiclesapi.duckdns.org/api/vehicles/"+
+      encodeURIComponent(vehicle.id),
+      {signal:controller.signal}
+    );
+
+    if(!response.ok){
+      throw new Error("HTTP "+response.status);
+    }
+
+    const data=await response.json();
+
+    if(data.identifier!==vehicle.id){
+      throw new Error("Data");
+    }
+
+    try{
+      localStorage.setItem(key,JSON.stringify({
+        at:Date.now(),
+        data
+      }));
+    }catch{}
+
+    return{data};
+  }catch{
+    if(cached?.data?.identifier===vehicle.id){
+      return{
+        data:cached.data,
+        unavailable:true
+      };
+    }
+
+    let snapshot=read("wt-snapshots",{})?.[vehicle.id];
+
+    if(!snapshot){
+      for(const country of Object.keys(countries)){
+        snapshot=read(
+          "wt-country-v1-"+country,null
+        )?.items?.find(item=>item.id===vehicle.id);
+
+        if(snapshot)break;
+      }
+    }
+
+    snapshot=snapshot||{id:vehicle.id};
+
+    return{
+      data:{
+        country:snapshot.country,
+        era:snapshot.rank,
+        arcade_br:snapshot.ab,
+        realistic_br:snapshot.rb,
+        simulator_br:snapshot.sb,
+        crew_total_count:snapshot.crew,
+        hull_armor:snapshot.hull,
+        turret_armor:snapshot.turret
+      },
+      unavailable:true
+    };
+  }finally{
+    clearTimeout(timer);
+  }
+}
+
+async function openComparison(){
+  if(selected.length!==2)return;
+
+  const selection=selected.map(vehicle=>({
+    ...vehicle
+  }));
+
+  const request=++requestId;
+
+  dialog.innerHTML=`
+    <button data-compare-close>
+      ${t("Schließen","Close")} ✕
+    </button>
+
+    <h2 id="wt-compare-title">
+      ${t("Fahrzeugvergleich","Vehicle comparison")}
+    </h2>
+
+    <p role="status">
+      ${t(
+        "Details werden geladen …",
+        "Loading details …"
+      )}
+    </p>
+  `;
+
+  dialog.showModal();
+
+  const results=await Promise.all(
+    selection.map(loadDetails)
+  );
+
+  if(request!==requestId||!dialog.open)return;
+
+  const data=results.map(result=>result.data);
+
+  const number=value=>
+    typeof value==="number"&&Number.isFinite(value)?
+    value.toLocaleString(
+      document.documentElement.lang==="en"?
+      "en-GB":"de-DE"
+    ):
+    "—";
+
+  const br=value=>
+    typeof value==="number"&&Number.isFinite(value)?
+    value.toFixed(1):
+    "—";
+
+  const armor=value=>
+    Array.isArray(value)&&value.length?
+    value.join(" / ")+" mm":
+    "—";
+
+  const rows=[
+    [
+      t("Nation","Nation"),
+      vehicle=>countries[vehicle.country]?
+        t(...countries[vehicle.country]):
+        vehicle.country||"—"
+    ],
+    [
+      t("Fahrzeugtyp (Quelle)","Vehicle type (source)"),
+      vehicle=>vehicle.vehicle_type||"—"
+    ],
+    [
+      t("Rang","Rank"),
+      vehicle=>number(vehicle.era)
+    ],
+    ["BR · AB",vehicle=>br(vehicle.arcade_br)],
+    ["BR · RB",vehicle=>br(vehicle.realistic_br)],
+    ["BR · SB",vehicle=>br(vehicle.simulator_br)],
+    [
+      t("Boden-BR · RB","Ground BR · RB"),
+      vehicle=>br(vehicle.realistic_ground_br)
+    ],
+    [
+      t("Boden-BR · SB","Ground BR · SB"),
+      vehicle=>br(vehicle.simulator_ground_br)
+    ],
+    [
+      t("Besatzung","Crew"),
+      vehicle=>number(vehicle.crew_total_count)
+    ],
+    [
+      t("Masse","Mass"),
+      vehicle=>typeof vehicle.mass==="number"?
+        number(vehicle.mass/1000)+" t":
+        "—"
+    ],
+    [
+      t("Geschwindigkeit · AB","Speed · AB"),
+      vehicle=>typeof vehicle.engine?.max_speed_ab==="number"?
+        number(vehicle.engine.max_speed_ab)+" km/h":
+        "—"
+    ],
+    [
+      t("Geschwindigkeit · RB/SB","Speed · RB/SB"),
+      vehicle=>typeof vehicle.engine?.max_speed_rb_sb==="number"?
+        number(vehicle.engine.max_speed_rb_sb)+" km/h":
+        "—"
+    ],
+    [
+      t("Wanne F/S/H","Hull F/S/R"),
+      vehicle=>armor(vehicle.hull_armor)
+    ],
+    [
+      t("Turm F/S/H","Turret F/S/R"),
+      vehicle=>armor(vehicle.turret_armor)
+    ],
+    [
+      t("Bewaffnung","Armament"),
+      vehicle=>{
+        const language=
+          document.documentElement.lang==="en"?"en":"de";
+
+        const names=read(
+          "wt-names-v1-"+language,null
+        )?.data?.weapons||{};
+
+        return Array.isArray(vehicle.weapons)&&
+          vehicle.weapons.length?
+          vehicle.weapons.map(weapon=>
+            (weapon.count||1)+" × "+
+            (names[String(weapon.name).toLowerCase()]||
+             weapon.name||
+             "—")
+          ).join("; "):
+          "—";
+      }
+    ],
+    [
+      t("Datenversion","Data version"),
+      vehicle=>vehicle.version||"—"
+    ]
+  ];
+
+  dialog.innerHTML=`
+    <button data-compare-close>
+      ${t("Schließen","Close")} ✕
+    </button>
+
+    <h2 id="wt-compare-title">
+      ${t("Fahrzeugvergleich","Vehicle comparison")}
+    </h2>
+
+    <div class="wt-compare-scroll"
+      tabindex="0"
+      role="region"
+      aria-label="${t(
+        "Vergleichstabelle, seitlich scrollbar",
+        "Comparison table, scroll horizontally"
+      )}">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">
+              ${t("Merkmal","Attribute")}
+            </th>
+
+            ${selection.map(vehicle=>`
+              <th scope="col">
+                ${esc(name(vehicle))}
+              </th>
+            `).join("")}
+          </tr>
+        </thead>
+
+        <tbody>
+          ${rows.map(([title,getValue])=>`
+            <tr>
+              <th scope="row">${esc(title)}</th>
+
+              ${data.map(vehicle=>`
+                <td>${esc(getValue(vehicle))}</td>
+              `).join("")}
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="wt-compare-message" role="status">
+      ${results.some(result=>result.unavailable)?
+        t(
+          "Detailquelle teilweise nicht erreichbar. Gespeicherte Werte werden verwendet. ",
+          "Detail source partially unavailable. Using saved values. "
+        ):
+        ""
+      }
+
+      ${t(
+        "Community-Daten. — bedeutet: kein Wert vorhanden. Fahrzeugtyp, Spielmodus und Ausbau beim Vergleich beachten.",
+        "Community data. — means no value is available. Consider vehicle type, game mode and modifications."
+      )}
+    </p>
+  `;
+}
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest(
+    "[data-compare-pick],[data-compare-remove],"+
+    "[data-compare-open],[data-compare-close]"
+  );
+
+  if(!button||button.disabled)return;
+
+  if(button.hasAttribute("data-compare-close")){
+    ++requestId;
+    dialog.close();
+    return;
+  }
+
+  if(button.hasAttribute("data-compare-open")){
+    openComparison();
+    return;
+  }
+
+  const id=button.dataset.comparePick||
+    button.dataset.compareRemove;
+
+  if(selected.some(vehicle=>vehicle.id===id)){
+    selected=selected.filter(vehicle=>vehicle.id!==id);
+  }else if(selected.length<2){
+    const title=button.closest(".catalog-card")
+      ?.querySelector("h3")?.textContent||id;
+
+    selected.push({
+      id,
+      name:title
+    });
+  }
+
+  try{
+    localStorage.setItem(
+      "wt-compare-selection",
+      JSON.stringify(selected)
+    );
+  }catch{}
+
+  refresh();
+});
+
+dialog.addEventListener("close",()=>{
+  ++requestId;
+});
+
+new MutationObserver(refresh).observe(root,{
+  childList:true,
+  subtree:true
+});
+
+new MutationObserver(refresh)
+  .observe(document.documentElement,{
+    attributes:true,
+    attributeFilter:["lang"]
+  });
+
+refresh();
+})();
+</script>
+
+<!-- LINEUP-PLANER -->
+<script>
+(()=>{
+if(window.wtLineupPlanner)return;
+window.wtLineupPlanner=true;
+
+const root=document.getElementById("content");
+const navigation=document.getElementById("navigation");
+
+if(!root||!navigation)return;
+
+const t=(de,en)=>
+  document.documentElement.lang==="en"?en:de;
+
+const esc=value=>String(value??"—")
+  .replace(/[&<>"']/g,char=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[char]));
+
+function read(key,fallback){
+  try{
+    return JSON.parse(localStorage.getItem(key))??fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+function write(key,value){
+  try{
+    localStorage.setItem(key,JSON.stringify(value));
+    return true;
+  }catch{
+    return false;
+  }
+}
+
+const countries=[
+  "germany","usa","britain","ussr","france",
+  "italy","japan","china","sweden","israel"
+];
+
+const countryNames={
+  germany:["Deutschland","Germany"],
+  usa:["USA","USA"],
+  britain:["Großbritannien","Great Britain"],
+  ussr:["UdSSR","USSR"],
+  france:["Frankreich","France"],
+  italy:["Italien","Italy"],
+  japan:["Japan","Japan"],
+  china:["China","China"],
+  sweden:["Schweden","Sweden"],
+  israel:["Israel","Israel"]
+};
+
+function normalize(value){
+  if(!value||typeof value!=="object"){
+    value={};
+  }
+
+  let vehicles=Array.isArray(value.vehicles)?
+    value.vehicles.filter(vehicle=>
+      vehicle&&
+      typeof vehicle.id==="string"&&
+      countries.includes(vehicle.country)
+    ):
+    [];
+
+  const country=vehicles[0]?.country;
+
+  vehicles=[
+    ...new Map(
+      vehicles.filter(vehicle=>
+        vehicle.country===country
+      ).map(vehicle=>[
+        vehicle.id,vehicle
+      ])
+    ).values()
+  ];
+
+  return{
+    id:typeof value.id==="string"?value.id:"",
+    name:typeof value.name==="string"?value.name:"",
+    mode:["ab","rb","sb"].includes(value.mode)?
+      value.mode:"rb",
+    battle:value.battle==="ground"?
+      "ground":"standard",
+    vehicles
+  };
+}
+
+let draft=normalize(read("wt-lineup-draft-v1",{}));
+let saved=read("wt-lineups-v1",[]);
+
+saved=Array.isArray(saved)?
+  saved.map(normalize).filter(lineup=>
+    lineup.id&&lineup.name
+  ):
+  [];
+
+let message="";
+
+const dialog=document.createElement("dialog");
+dialog.id="wt-lineup-dialog";
+dialog.setAttribute(
+  "aria-labelledby",
+  "wt-lineup-title"
+);
+document.body.append(dialog);
+
+function name(vehicle){
+  const language=
+    document.documentElement.lang==="en"?"en":"de";
+
+  return read(
+    "wt-names-v1-"+language,null
+  )?.data?.vehicles?.[
+    vehicle.id.toLowerCase()+"_short"
+  ]||vehicle.name||vehicle.id;
+}
+
+function findVehicle(id){
+  for(const country of countries){
+    const vehicle=read(
+      "wt-country-v1-"+country,null
+    )?.items?.find(item=>item.id===id);
+
+    if(vehicle)return vehicle;
+  }
+
+  return read("wt-snapshots",{})?.[id];
+}
+
+function rating(vehicle){
+  const groundKey=draft.mode==="rb"?
+    "grb":
+    draft.mode==="sb"?"gsb":null;
+
+  if(
+    draft.battle==="ground"&&
+    vehicle.category==="air"&&
+    groundKey
+  ){
+    return vehicle[groundKey];
+  }
+
+  return vehicle[draft.mode];
+}
+
+function formatBR(value){
+  return typeof value==="number"&&Number.isFinite(value)?
+    value.toFixed(1):"—";
+}
+
+function saveDraft(){
+  if(!write("wt-lineup-draft-v1",draft)){
+    message=t(
+      "Speichern auf diesem Gerät nicht möglich.",
+      "Saving on this device is unavailable."
+    );
+  }
+}
+
+function refreshButtons(){
+  let button=navigation.querySelector(
+    "[data-lineup-open]"
+  );
+
+  if(!button){
+    button=document.createElement("button");
+    button.dataset.lineupOpen="";
+    navigation.append(button);
+  }
+
+  const markup=`
+    <span aria-hidden="true">▤</span>
+    ${t("Lineups","Lineups")} (${draft.vehicles.length})
+  `;
+
+  if(button.innerHTML!==markup){
+    button.innerHTML=markup;
+  }
+
+  root.querySelectorAll(".catalog-card")
+    .forEach(card=>{
+      const detail=card.querySelector("[data-inspect]");
+      if(!detail)return;
+
+      let pick=card.querySelector("[data-lineup-pick]");
+
+      if(!pick){
+        pick=document.createElement("button");
+        pick.className="wt-lineup-pick";
+        pick.dataset.lineupPick=detail.dataset.inspect;
+        card.append(pick);
+      }
+
+      const active=draft.vehicles.some(vehicle=>
+        vehicle.id===detail.dataset.inspect
+      );
+
+      const text=active?
+        t("✓ Im Lineup","✓ In lineup"):
+        t("+ Zum Lineup","+ Add to lineup");
+
+      if(pick.textContent!==text){
+        pick.textContent=text;
+      }
+
+      if(pick.getAttribute("aria-pressed")!==String(active)){
+        pick.setAttribute(
+          "aria-pressed",
+          String(active)
+        );
+      }
+    });
+}
+
+function render(){
+  const ratings=draft.vehicles.map(rating);
+
+  const known=ratings.filter(value=>
+    typeof value==="number"&&Number.isFinite(value)
+  );
+
+  const highest=known.length?
+    Math.max(...known):null;
+
+  const incomplete=known.length<ratings.length;
+  const country=draft.vehicles[0]?.country;
+
+  dialog.innerHTML=`
+    <button data-lineup-close>
+      ${t("Schließen","Close")} ✕
+    </button>
+
+    <h2 id="wt-lineup-title">
+      ${t("Lineup-Planer","Lineup planner")}
+    </h2>
+
+    <label>
+      ${t(
+        "Gespeicherte Aufstellungen",
+        "Saved lineups"
+      )}
+
+      <select id="wt-lineup-saved">
+        <option value="">
+          ${t(
+            "Aufstellung laden …",
+            "Load lineup …"
+          )}
+        </option>
+
+        ${saved.map(lineup=>`
+          <option value="${esc(lineup.id)}">
+            ${esc(lineup.name)}
+            (${lineup.vehicles.length})
+          </option>
+        `).join("")}
+      </select>
+    </label>
+
+    <div class="wt-lineup-fields">
+      <label>
+        ${t("Name","Name")}
+
+        <input id="wt-lineup-name"
+          maxlength="80"
+          value="${esc(draft.name)}"
+          placeholder="${t(
+            "Deutschland Boden-RB",
+            "Germany Ground RB"
+          )}">
+      </label>
+
+      <label>
+        ${t("Spielmodus","Game mode")}
+
+        <select id="wt-lineup-mode">
+          ${[
+            ["ab","Arcade"],
+            ["rb",t("Realistisch","Realistic")],
+            ["sb","Simulator"]
+          ].map(([mode,title])=>`
+            <option value="${mode}"
+              ${draft.mode===mode?"selected":""}>
+              ${title}
+            </option>
+          `).join("")}
+        </select>
+      </label>
+
+      <label>
+        ${t("BR-Basis","BR basis")}
+
+        <select id="wt-lineup-battle">
+          <option value="standard"
+            ${draft.battle==="standard"?"selected":""}>
+            ${t(
+              "Standard-Fahrzeug-BR",
+              "Standard vehicle BR"
+            )}
+          </option>
+
+          <option value="ground"
+            ${draft.battle==="ground"?"selected":""}>
+            ${t(
+              "Bodengefechte (Flugzeug-BR)",
+              "Ground battles (aircraft BR)"
+            )}
+          </option>
+        </select>
+      </label>
+    </div>
+
+    <div class="wt-lineup-result">
+      ${t(
+        "Höchster ausgewählter BR",
+        "Highest selected BR"
+      )}: ${formatBR(highest)}
+      · ${draft.mode.toUpperCase()}
+
+      ${incomplete?
+        " · "+t("unvollständig","incomplete"):
+        ""}
+    </div>
+
+    <p>
+      ${country?
+        esc(t(...countryNames[country]))+" · ":
+        ""}
+      ${draft.vehicles.length}
+      ${t("Fahrzeuge","vehicles")}
+    </p>
+
+    <div>
+      ${draft.vehicles.map(vehicle=>`
+        <div class="wt-lineup-slot">
+          <div>
+            <strong>${esc(name(vehicle))}</strong>
+            <small>
+              BR ${formatBR(rating(vehicle))}
+            </small>
+          </div>
+
+          <button
+            data-lineup-remove="${esc(vehicle.id)}"
+            aria-label="${esc(
+              t("Entfernen: ","Remove: ")+name(vehicle)
+            )}">
+            ×
+          </button>
+        </div>
+      `).join("")||`
+        <p>${t(
+          "Noch keine Fahrzeuge. Schließe dieses Fenster und tippe auf den Fahrzeugkarten auf „+ Zum Lineup“.",
+          "No vehicles yet. Close this window and tap “+ Add to lineup” on vehicle cards."
+        )}</p>
+      `}
+    </div>
+
+    <div class="wt-lineup-controls">
+      <button class="gold" data-lineup-save>
+        ${t(
+          "Aufstellung speichern",
+          "Save lineup"
+        )}
+      </button>
+
+      <button data-lineup-new>
+        ${t(
+          "Neue Aufstellung",
+          "New lineup"
+        )}
+      </button>
+    </div>
+
+    <p id="wt-lineup-message" role="status">
+      ${esc(message)}
+    </p>
+
+    <p class="notice">${t(
+      "Alle Fahrzeuge müssen derselben Forschungsnation angehören. Der angezeigte Wert ist der höchste BR deiner Auswahl, keine vollständige Matchmaking-Berechnung. Bei fehlenden Werten ist das Ergebnis unvollständig. Gespeicherte Aufstellungen bleiben auf diesem Gerät.",
+      "All vehicles must belong to the same research nation. The displayed value is the highest BR selected, not a complete matchmaking calculation. Missing values make the result incomplete. Saved lineups stay on this device."
+    )}</p>
+  `;
+
+  document.getElementById("wt-lineup-name")
+    .addEventListener("input",event=>{
+      draft.name=event.target.value;
+      saveDraft();
+    });
+
+  document.getElementById("wt-lineup-mode")
+    .addEventListener("change",event=>{
+      draft.mode=event.target.value;
+      saveDraft();
+      render();
+    });
+
+  document.getElementById("wt-lineup-battle")
+    .addEventListener("change",event=>{
+      draft.battle=event.target.value;
+      saveDraft();
+      render();
+    });
+
+  document.getElementById("wt-lineup-saved")
+    .addEventListener("change",event=>{
+      const lineup=saved.find(item=>
+        item.id===event.target.value
+      );
+
+      if(!lineup)return;
+
+      draft=normalize(
+        JSON.parse(JSON.stringify(lineup))
+      );
+
+      draft.vehicles=draft.vehicles.map(vehicle=>
+        findVehicle(vehicle.id)||vehicle
+      );
+
+      message=t(
+        "Aufstellung geladen.",
+        "Lineup loaded."
+      );
+
+      saveDraft();
+      refreshButtons();
+      render();
+    });
+}
+
+function open(){
+  render();
+
+  if(!dialog.open){
+    dialog.showModal();
+  }
+}
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest(
+    "[data-lineup-open],[data-lineup-close],"+
+    "[data-lineup-pick],[data-lineup-remove],"+
+    "[data-lineup-save],[data-lineup-new]"
+  );
+
+  if(!button)return;
+
+  if(button.hasAttribute("data-lineup-open")){
+    open();
+    return;
+  }
+
+  if(button.hasAttribute("data-lineup-close")){
+    dialog.close();
+    return;
+  }
+
+  if(button.hasAttribute("data-lineup-new")){
+    draft=normalize({});
+
+    message=t(
+      "Neue Aufstellung. Gespeicherte Aufstellungen bleiben erhalten.",
+      "New lineup. Saved lineups are retained."
+    );
+
+    saveDraft();
+    refreshButtons();
+    render();
+    return;
+  }
+
+  if(button.hasAttribute("data-lineup-save")){
+    draft.name=draft.name.trim();
+
+    if(!draft.name||!draft.vehicles.length){
+      message=t(
+        "Bitte einen Namen eingeben und mindestens ein Fahrzeug hinzufügen.",
+        "Enter a name and add at least one vehicle."
+      );
+
+      render();
+      return;
+    }
+
+    const lineup=JSON.parse(JSON.stringify(draft));
+
+    lineup.id=lineup.id||
+      "lineup-"+Date.now()+"-"+
+      Math.random().toString(36).slice(2,8);
+
+    const updated=saved.filter(item=>
+      item.id!==lineup.id
+    ).concat(lineup);
+
+    if(write("wt-lineups-v1",updated)){
+      saved=updated;
+      draft.id=lineup.id;
+      saveDraft();
+
+      message=t(
+        "Aufstellung gespeichert.",
+        "Lineup saved."
+      );
+    }else{
+      message=t(
+        "Speichern auf diesem Gerät nicht möglich.",
+        "Saving on this device is unavailable."
+      );
+    }
+
+    render();
+    return;
+  }
+
+  const id=button.dataset.lineupPick||
+    button.dataset.lineupRemove;
+
+  if(draft.vehicles.some(vehicle=>vehicle.id===id)){
+    draft.vehicles=draft.vehicles.filter(vehicle=>
+      vehicle.id!==id
+    );
+
+    message="";
+  }else{
+    const vehicle=findVehicle(id);
+
+    if(!vehicle||!countries.includes(vehicle.country)){
+      message=t(
+        "Bitte zuerst die Nation dieses Fahrzeugs öffnen, damit seine Daten geladen werden.",
+        "Open this vehicle’s nation first to load its data."
+      );
+
+      open();
+      return;
+    }
+
+    if(
+      draft.vehicles.length&&
+      draft.vehicles[0].country!==vehicle.country
+    ){
+      message=t(
+        "Dieses Fahrzeug gehört zu einer anderen Nation. Speichere dein Lineup und starte eine neue Aufstellung.",
+        "This vehicle belongs to another nation. Save your lineup and start a new one."
+      );
+
+      open();
+      return;
+    }
+
+    draft.vehicles.push({
+      ...vehicle,
+      name:name(vehicle)
+    });
+
+    message="";
+  }
+
+  saveDraft();
+  refreshButtons();
+
+  if(dialog.open){
+    render();
+  }
+});
+
+const observer=new MutationObserver(refreshButtons);
+
+observer.observe(root,{
+  childList:true,
+  subtree:true
+});
+
+observer.observe(navigation,{
+  childList:true
+});
+
+new MutationObserver(()=>{
+  refreshButtons();
+
+  if(dialog.open){
+    render();
+  }
+}).observe(document.documentElement,{
+  attributes:true,
+  attributeFilter:["lang"]
+});
+
+refreshButtons();
+})();
+</script>
+
+<!-- STARTBILDSCHIRM UND OFFLINE-STATUS -->
+<script>
+(()=>{
+if(window.wtHomeScreen)return;
+window.wtHomeScreen=true;
+
+const main=document.querySelector("main");
+const notice=document.createElement("p");
+
+notice.className="notice";
+notice.setAttribute("role","status");
+
+if(main){
+  main.prepend(notice);
+}
+
+let failed=false;
+
+function refresh(){
+  const english=
+    document.documentElement.lang==="en";
+
+  notice.hidden=navigator.onLine&&!failed;
+
+  notice.textContent=navigator.onLine?
+    failed?
+      english?
+        "Offline setup failed. Check that sw.js, the manifest and all three PNG icons are uploaded.":
+        "Offline-Einrichtung fehlgeschlagen. Prüfe, ob sw.js, das Manifest und alle drei PNG-Symbole hochgeladen sind.":
+      "":
+    english?
+      "Offline. Previously saved catalogs, favorites and lineups may be available. New data and uncached images need internet.":
+      "Offline. Bereits gespeicherte Kataloge, Favoriten und Lineups können verfügbar sein. Neue Daten und nicht gespeicherte Bilder benötigen Internet.";
+}
+
+window.addEventListener("online",refresh);
+window.addEventListener("offline",refresh);
+
+new MutationObserver(refresh)
+  .observe(document.documentElement,{
+    attributes:true,
+    attributeFilter:["lang"]
+  });
+
+refresh();
+
+if(
+  "serviceWorker" in navigator&&
+  location.protocol==="https:"
+){
+  navigator.serviceWorker.register(
+    "./sw.js",
+    {scope:"./"}
+  ).then(registration=>{
+    function watch(worker){
+      if(!worker)return;
+
+      worker.addEventListener("statechange",()=>{
+        if(
+          worker.state==="redundant"&&
+          !registration.active
+        ){
+          failed=true;
+          refresh();
+        }
+      });
+    }
+
+    watch(registration.installing);
+
+    registration.addEventListener("updatefound",()=>{
+      watch(registration.installing);
+    });
+  }).catch(()=>{
+    failed=true;
+    refresh();
+  });
+}
+})();
+</script>
+
+<!-- BR-MINIMUM UND BR-MAXIMUM -->
+<script>
+(()=>{
+if(window.wtBRControls)return;
+window.wtBRControls=true;
+
+const root=document.getElementById("content");
+if(!root)return;
+
+const t=(de,en)=>
+  document.documentElement.lang==="en"?en:de;
+
+function read(key,fallback){
+  try{
+    return JSON.parse(localStorage.getItem(key))??fallback;
+  }catch{
+    return fallback;
+  }
+}
+
+const saved=read("wt-br-range-v1",{});
+
+const valid=value=>
+  typeof value==="number"&&
+  Number.isFinite(value)&&
+  value>=0;
+
+let minimum=valid(saved?.minimum)?
+  saved.minimum:null;
+
+let maximum=valid(saved?.maximum)?
+  saved.maximum:null;
+
+if(
+  minimum!==null&&
+  maximum!==null&&
+  minimum>maximum
+){
+  maximum=minimum;
+}
+
+window.wtBRFilter=(vehicle,mode)=>{
+  if(minimum===null&&maximum===null){
+    return true;
+  }
+
+  const value=vehicle[mode];
+
+  return valid(value)&&
+    (minimum===null||value>=minimum)&&
+    (maximum===null||value<=maximum);
+};
+
+function save(){
+  try{
+    localStorage.setItem(
+      "wt-br-range-v1",
+      JSON.stringify({minimum,maximum})
+    );
+  }catch{}
+}
+
+function apply(){
+  save();
+  refresh();
+
+  root.querySelector("#catalog-search")
+    ?.dispatchEvent(
+      new Event("input",{bubbles:true})
+    );
+}
+
+let lastMarkup="";
+
+function refresh(){
+  const filters=root.querySelector(".catalog-filters");
+  if(!filters)return;
+
+  let controls=filters.querySelector(".wt-br-controls");
+
+  if(!controls){
+    controls=document.createElement("div");
+    controls.className="wt-br-controls";
+    filters.append(controls);
+    lastMarkup="";
+  }
+
+  const mode=root.querySelector("#choose-mode")
+    ?.value||"rb";
+
+  const values=[];
+
+  for(const country of[
+    "germany","usa","britain","ussr","france",
+    "italy","japan","china","sweden","israel"
+  ]){
+    const data=read(
+      "wt-country-v1-"+country,null
+    );
+
+    if(Array.isArray(data?.items)){
+      data.items.forEach(vehicle=>{
+        if(valid(vehicle[mode])){
           values.push(vehicle[mode]);
         }
       });
     }
-
-    if (minimum !== null) values.push(minimum);
-    if (maximum !== null) values.push(maximum);
-
-    const ratings = [...new Set(values)].sort(
-      (a, b) => a - b
-    );
-
-    const options = selected =>
-      `<option value="all">${t('Beliebig', 'Any')}</option>` +
-      ratings.map(value => `
-        <option
-          value="${value}"
-          ${value === selected ? 'selected' : ''}
-        >
-          ${value.toFixed(1)}
-        </option>
-      `).join('');
-
-    const markup = `
-      <label>
-        ${t('BR-Minimum', 'Minimum BR')}
-
-        <select
-          id="wt-br-minimum"
-          aria-label="${t('BR-Minimum', 'Minimum BR')}"
-        >
-          ${options(minimum)}
-        </select>
-      </label>
-
-      <label>
-        ${t('BR-Maximum', 'Maximum BR')}
-
-        <select
-          id="wt-br-maximum"
-          aria-label="${t('BR-Maximum', 'Maximum BR')}"
-        >
-          ${options(maximum)}
-        </select>
-      </label>
-
-      <p class="wt-br-note">
-        ${t(
-          'Filter für den gewählten Spielmodus. Bei aktivem BR-Filter werden Fahrzeuge ohne BR-Wert ausgeblendet.',
-          'Filter for the selected game mode. Vehicles without a BR value are hidden when a BR filter is active.'
-        )}
-      </p>
-
-      <button class="wt-br-reset" id="wt-br-reset">
-        ${t('BR-Filter zurücksetzen', 'Reset BR filter')}
-      </button>
-    `;
-
-    if (markup === lastMarkup) return;
-
-    lastMarkup = markup;
-    controls.innerHTML = markup;
-
-    controls.querySelector('#wt-br-minimum')
-      .addEventListener('change', event => {
-        minimum = event.target.value === 'all'
-          ? null
-          : Number(event.target.value);
-
-        if (
-          minimum !== null &&
-          maximum !== null &&
-          minimum > maximum
-        ) {
-          maximum = minimum;
-        }
-
-        apply();
-      });
-
-    controls.querySelector('#wt-br-maximum')
-      .addEventListener('change', event => {
-        maximum = event.target.value === 'all'
-          ? null
-          : Number(event.target.value);
-
-        if (
-          maximum !== null &&
-          minimum !== null &&
-          maximum < minimum
-        ) {
-          minimum = maximum;
-        }
-
-        apply();
-      });
-
-    controls.querySelector('#wt-br-reset')
-      .addEventListener('click', () => {
-        minimum = null;
-        maximum = null;
-        apply();
-      });
   }
 
-  new MutationObserver(refresh).observe(root, {
-    childList: true,
-    subtree: true
+  const snapshots=read("wt-snapshots",{});
+
+  if(snapshots&&typeof snapshots==="object"){
+    Object.values(snapshots).forEach(vehicle=>{
+      if(vehicle&&valid(vehicle[mode])){
+        values.push(vehicle[mode]);
+      }
+    });
+  }
+
+  if(minimum!==null){
+    values.push(minimum);
+  }
+
+  if(maximum!==null){
+    values.push(maximum);
+  }
+
+  const ratings=[...new Set(values)]
+    .sort((first,second)=>first-second);
+
+  const options=selected=>
+    `<option value="all">
+      ${t("Beliebig","Any")}
+    </option>`+
+    ratings.map(value=>`
+      <option value="${value}"
+        ${value===selected?"selected":""}>
+        ${value.toFixed(1)}
+      </option>
+    `).join("");
+
+  const markup=`
+    <label>
+      ${t("BR-Minimum","Minimum BR")}
+
+      <select id="wt-br-minimum"
+        aria-label="${t(
+          "BR-Minimum",
+          "Minimum BR"
+        )}">
+        ${options(minimum)}
+      </select>
+    </label>
+
+    <label>
+      ${t("BR-Maximum","Maximum BR")}
+
+      <select id="wt-br-maximum"
+        aria-label="${t(
+          "BR-Maximum",
+          "Maximum BR"
+        )}">
+        ${options(maximum)}
+      </select>
+    </label>
+
+    <p class="wt-br-note">${t(
+      "Filter für den gewählten Spielmodus. Bei aktivem BR-Filter werden Fahrzeuge ohne BR-Wert ausgeblendet.",
+      "Filter for the selected game mode. Vehicles without a BR value are hidden when a BR filter is active."
+    )}</p>
+
+    <button class="wt-br-reset" id="wt-br-reset">
+      ${t(
+        "BR-Filter zurücksetzen",
+        "Reset BR filter"
+      )}
+    </button>
+  `;
+
+  if(markup===lastMarkup)return;
+
+  lastMarkup=markup;
+  controls.innerHTML=markup;
+
+  controls.querySelector("#wt-br-minimum")
+    .addEventListener("change",event=>{
+      minimum=event.target.value==="all"?
+        null:Number(event.target.value);
+
+      if(
+        minimum!==null&&
+        maximum!==null&&
+        minimum>maximum
+      ){
+        maximum=minimum;
+      }
+
+      apply();
+    });
+
+  controls.querySelector("#wt-br-maximum")
+    .addEventListener("change",event=>{
+      maximum=event.target.value==="all"?
+        null:Number(event.target.value);
+
+      if(
+        maximum!==null&&
+        minimum!==null&&
+        maximum<minimum
+      ){
+        minimum=maximum;
+      }
+
+      apply();
+    });
+
+  controls.querySelector("#wt-br-reset")
+    .addEventListener("click",()=>{
+      minimum=null;
+      maximum=null;
+      apply();
+    });
+}
+
+new MutationObserver(refresh).observe(root,{
+  childList:true,
+  subtree:true
+});
+
+new MutationObserver(refresh)
+  .observe(document.documentElement,{
+    attributes:true,
+    attributeFilter:["lang"]
   });
 
-  new MutationObserver(refresh).observe(
-    document.documentElement,
-    {
-      attributes: true,
-      attributeFilter: ['lang']
-    }
-  );
-
-  refresh();
+refresh();
 })();
 </script>
-<!-- /WT BR FILTER -->
+
+</body>
+</html>
