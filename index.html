@@ -2838,6 +2838,163 @@ function escapeHTML(value) {
   }
 })();
 </script>
+<!-- WT VEHICLE IMAGES -->
+<style>
+.wt-photo {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 170px;
+  margin: 16px 0;
+  overflow: hidden;
+  border: 1px solid #344437;
+  border-radius: 12px;
+  background: radial-gradient(
+    ellipse at center,
+    #2b3a2e,
+    #101710
+  );
+}
+
+.wt-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.wt-photo.ready img {
+  opacity: 1;
+}
+
+.wt-photo span {
+  position: absolute;
+  padding: 12px;
+  color: #abb8a9;
+  font-size: 13px;
+  text-align: center;
+}
+
+.wt-photo.ready span {
+  display: none;
+}
+
+.wt-photo.failed img {
+  display: none;
+}
+
+#vehicle-detail .wt-photo {
+  height: 240px;
+}
+</style>
+
+<script>
+(() => {
+  if (window.wtVehicleImages) return;
+  window.wtVehicleImages = true;
+
+  const content = document.getElementById('content');
+  const modal = document.getElementById('vehicle-detail');
+
+  if (!content || !modal) return;
+
+  const text = (de, en) =>
+    document.documentElement.lang === 'en' ? en : de;
+
+  function addPhoto(host, id, title, before) {
+    if (!id || host.querySelector('.wt-photo')) return;
+
+    const box = document.createElement('div');
+    box.className = 'wt-photo';
+
+    const image = document.createElement('img');
+    image.alt = title;
+    image.loading = host === modal ? 'eager' : 'lazy';
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+
+    const caption = document.createElement('span');
+    caption.textContent = text(
+      'Bild wird geladen …',
+      'Loading image …'
+    );
+
+    image.addEventListener('load', () => {
+      box.classList.add('ready');
+    });
+
+    image.addEventListener('error', () => {
+      box.classList.add('failed');
+      caption.textContent = text(
+        'Kein Bild verfügbar',
+        'Image unavailable'
+      );
+    });
+
+    image.src =
+      'https://wtvehiclesapi.duckdns.org/assets/images/'
+      + encodeURIComponent(id.toLowerCase())
+      + '.png';
+
+    box.append(image, caption);
+    host.insertBefore(box, before);
+  }
+
+  function refresh() {
+    content.querySelectorAll('.catalog-card').forEach(card => {
+      const button = card.querySelector('[data-inspect]');
+      const title = card.querySelector('h3');
+
+      if (button && title) {
+        addPhoto(
+          card,
+          button.dataset.inspect,
+          title.textContent,
+          title
+        );
+      }
+    });
+
+    const title = modal.querySelector('#detail-title');
+    const link = modal.querySelector(
+      'a[href*="wiki.warthunder.com/unit/"]'
+    );
+
+    if (title && link) {
+      try {
+        const url = new URL(link.href);
+        const id = decodeURIComponent(
+          url.pathname.split('/').pop()
+        );
+
+        addPhoto(
+          modal,
+          id,
+          title.textContent,
+          title.nextSibling
+        );
+      } catch {}
+    }
+  }
+
+  const observer = new MutationObserver(refresh);
+
+  observer.observe(content, {
+    childList: true,
+    subtree: true
+  });
+
+  observer.observe(modal, {
+    childList: true,
+    subtree: true
+  });
+
+  refresh();
+})();
+</script>
+<!-- /WT VEHICLE IMAGES -->
 </body>
 </html>
 </body>
