@@ -1,347 +1,273 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#141b15">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="WT Companion">
-<title>WT Companion • Military Tactical</title>
+<!-- WT BR FILTER -->
 <style>
-:root{color-scheme:dark;--bg:#101510;--panel:#1a231b;--line:#354135;--gold:#dfb968;--text:#eef1e9;--muted:#b5c0af;}
-*{box-sizing:border-box;}
-body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;}
-button,input,select{font:inherit;}
-button,a,input,select{-webkit-tap-highlight-color:transparent;}
-button,a{touch-action:manipulation;}
-button,select,input{border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);min-height:46px;padding:11px 14px;}
-button{cursor:pointer;}
-button:hover{border-color:var(--gold);}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:3px;}
-header{border-bottom:1px solid var(--line);background:#141b15;padding:18px max(18px,env(safe-area-inset-left));}
-.top{max-width:1000px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;}
-.brand{font-weight:900;letter-spacing:1px;}
-.brand span{color:var(--gold);}
-.brand small{display:block;font-size:10px;color:var(--muted);letter-spacing:3px;margin-top:5px;}
-main{max-width:1000px;margin:auto;padding:24px 18px calc(110px + env(safe-area-inset-bottom));}
-.eyebrow{color:var(--gold);font-size:11px;letter-spacing:3px;font-weight:800;}
-.hero{border:1px solid var(--line);border-radius:20px;padding:26px;background:radial-gradient(ellipse at top right,#394b2d,transparent 70%),repeating-linear-gradient( 135deg,transparent 0 22px,#ffffff03 22px 23px ),var(--panel);}
-h1{font-size:clamp(28px,6vw,46px);line-height:1.1;margin:15px 0;}
-h2{font-size:22px;margin:24px 0 14px;}
-p{color:var(--muted);line-height:1.6;}
-.hero p{max-width:530px;}
-.gold{background:var(--gold);color:#151a12;font-weight:800;border-color:var(--gold);}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.card,.notice{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:18px;}
-input,select{width:100%;min-width:0;}
-.card{position:relative;}
-.card h3{font-size:19px;margin:14px 0 8px;}
-.badge{display:inline-block;color:var(--gold);font-size:11px;letter-spacing:1px;border:1px solid var(--line);padding:5px 8px;border-radius:6px;}
-.symbol{font-size:30px;margin-top:14px;color:var(--muted);}
-.card p{font-size:13px;margin:8px 0 18px;}
-.actions{display:flex;align-items:center;gap:10px;justify-content:space-between;}
-.link{color:var(--gold);text-decoration:none;font-size:14px;display:inline-flex;align-items:center;min-height:44px;}
-.star{font-size:23px;padding:5px 13px;color:var(--gold);}
-.star[aria-pressed="true"]{background:#dfb96820;border-color:var(--gold);}
-.notice{font-size:13px;color:var(--muted);line-height:1.6;margin-top:18px;}
-.empty{grid-column:1 / -1;text-align:center;padding:30px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);}
-nav{position:fixed;bottom:0;left:0;right:0;background:#141b15f5;border-top:1px solid var(--line);padding:10px 10px calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:center;gap:6px;backdrop-filter:blur(12px);z-index:5;}
-nav button{border:0;background:transparent;flex:1;max-width:170px;padding:8px 4px;font-size:11px;color:var(--muted);}
-nav button span{display:block;font-size:21px;margin-bottom:4px;}
-nav button[aria-current="page"]{background:#dfb96815;color:var(--gold);}
-footer{text-align:center;color:var(--muted);font-size:11px;margin-top:32px;line-height:1.7;}
-#status{color:var(--gold);font-size:13px;}
-#status:empty{display:none;}
-#vehicle-detail{width:min(560px,calc(100% - 28px));max-height:85dvh;overflow-y:auto;border:1px solid var(--gold);border-radius:20px;padding:24px;background:var(--panel);color:var(--text);}
-#vehicle-detail::backdrop{background:#000b;}
-#vehicle-detail h2{margin:16px 0;}
-#vehicle-detail table{width:100%;border-collapse:collapse;}
-#vehicle-detail th,#vehicle-detail td{padding:12px 4px;border-bottom:1px solid var(--line);text-align:left;font-size:14px;}
-#vehicle-detail th{color:var(--muted);font-weight:500;}
-#vehicle-detail td{text-align:right;overflow-wrap:anywhere;}
-.detail-button{width:100%;margin-top:14px;}
-.nation-card{text-align:left;}
-.nation-card strong{display:block;font-size:21px;margin:12px 0;}
-.nation-card span{font-size:12px;color:var(--muted);}
-.catalog-filters{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0;}
-.catalog-filters input{grid-column:1 / -1;}
-.catalog-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
-.catalog-bar button{margin-top:12px;}
-#catalog-results{font-size:13px;color:var(--muted);}
-.catalog-br{color:var(--gold);font-size:20px;font-weight:800;}
-.catalog-card h3{overflow-wrap:anywhere;}
-@media (max-width:700px){.grid{grid-template-columns:repeat(2,1fr);}
-.hero{padding:22px;}
-.brand{font-size:14px;}
+.wt-br-controls {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
-@media (max-width:420px){.grid{grid-template-columns:1fr;}
+
+.wt-br-controls label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.wt-br-controls select {
+  margin-top: 6px;
+}
+
+.wt-br-note {
+  grid-column: 1 / -1;
+  font-size: 12px;
+  margin: 0;
+}
+
+.wt-br-reset {
+  grid-column: 1 / -1;
 }
 </style>
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
-</head>
-<body>
-<header>
-  <div class="top">
-    <div class="brand">
-      <span>WT</span> COMPANION
-      <small>MILITARY TACTICAL</small>
-    </div>
-    <button id="language" aria-label="Switch to English">EN</button>
-  </div>
-</header>
-<main>
-  <div id="content"></div>
-  <p id="status" role="status"></p>
-  <footer id="footer"></footer>
-</main>
-<nav id="navigation" aria-label="Navigation"></nav>
-<dialog
-  id="vehicle-detail"
-  aria-labelledby="detail-title"
-></dialog>
+
 <script>
-"use strict";let lang="de";try{lang="en"===localStorage.getItem("wt-language")?"en":"de"}catch{}const vehicles=[{id:"bf109",name:"Bf 109 E-3",nation:"de",
-type:"air"},{id:"fw190",name:"Fw 190 A-1",nation:"de",type:"air"},{id:"p51",name:"P-51D-5",nation:"us",type:"air"},{id:"p47",name:"P-47D-28",nation:"us",
-type:"air"},{id:"spitfire",name:"Spitfire Mk Ia",nation:"gb",type:"air"},{id:"yak",name:"Yak-1",nation:"su",type:"air"},{id:"tiger",name:"Tiger H1",nation:"de",
-type:"ground"},{id:"panther",name:"Panther D",nation:"de",type:"ground"},{id:"sherman",name:"M4A1",nation:"us",type:"ground"},{id:"chaffee",name:"M24",
-nation:"us",type:"ground"},{id:"cromwell",name:"Cromwell V",nation:"gb",type:"ground"},{id:"t34",name:"T-34 (1942)",nation:"su",type:"ground"}]
-;function escapeHTML(e){return String(e).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[e]))}(()=>{
-const e="https://wtvehiclesapi.duckdns.org/api/vehicles",t=864e5,a={germany:["Deutschland","Germany","🇩🇪"],usa:["USA","USA","🇺🇸"],
-britain:["Großbritannien","Great Britain","🇬🇧"],ussr:["UdSSR","USSR","★"],france:["Frankreich","France","🇫🇷"],italy:["Italien","Italy","🇮🇹"],
-japan:["Japan","Japan","🇯🇵"],china:["China","China","🇨🇳"],sweden:["Schweden","Sweden","🇸🇪"],israel:["Israel","Israel","🇮🇱"]},n={
-all:["Alle Fahrzeuge","All vehicles"],air:["Flugzeuge","Aircraft"],heli:["Hubschrauber","Helicopters"],ground:["Bodenfahrzeuge","Ground vehicles"],
-blue:["Hochseeflotte","Bluewater fleet"],coast:["Küstenflotte","Coastal fleet"],other:["Weitere Typen","Other types"]},r={bf109:"bf-109e-3",fw190:"fw-190a-1",
-p51:"p-51d-5",p47:"p-47d-28",spitfire:"spitfire_mk1",yak:"yak-1_early",tiger:"germ_pzkpfw_VI_ausf_h1_tiger",panther:"germ_pzkpfw_V_ausf_d_panther",
-sherman:"us_m4a1_1942_sherman",chaffee:"us_m24_chaffee",cromwell:"uk_a27m_cromwell_5",t34:"ussr_t_34_1942"
-},i=(e,t)=>"de"===lang?e:t,o=e=>a[e]?.["de"===lang?0:1]||e,s=e=>n[e]["de"===lang?0:1],l=escapeHTML;function c(e,t){try{
-return JSON.parse(localStorage.getItem(e))??t}catch{return t}}let d=!1;function u(e,t){try{localStorage.setItem(e,JSON.stringify(t))}catch{d=!0}}
-const g=c("wt-favorites",[]),h=new Set(Array.isArray(g)?g.filter(e=>"string"==typeof e).map(e=>r[e]||e):[]);let m=c("wt-snapshots",{})
-;m&&!Array.isArray(m)&&"object"==typeof m||(m={}),vehicles.forEach(e=>{const t=r[e.id];t&&h.has(t)&&!m[t]&&(m[t]={id:t,country:{de:"germany",us:"usa",
-gb:"britain",su:"ussr"}[e.nation],category:e.type,name:e.name,rank:null,ab:null,rb:null,sb:null})}),u("wt-favorites",[...h]),u("wt-snapshots",m)
-;let p="nations",f="germany",b="all",y="",v="all",w="rb",_=60,$=!1,k="",S=0,A=[],E=0
-;const B={},I={},L={},T=document.getElementById("content"),C=document.getElementById("vehicle-detail");function F(e){
-return["fighter","assault","bomber"].includes(e)?"air":["attack_helicopter","utility_helicopter"].includes(e)?"heli":["tank","light_tank","medium_tank","heavy_tank","tank_destroyer","spaa","lbv","mbv","hbv","exoskeleton"].includes(e)?"ground":["destroyer","light_cruiser","heavy_cruiser","battlecruiser","battleship","ship"].includes(e)?"blue":["boat","heavy_boat","barge","frigate"].includes(e)?"coast":"other"
-}function R(e){return{id:e.identifier,country:e.country,category:F(e.vehicle_type),rank:e.era,ab:e.arcade_br,rb:e.realistic_br,sb:e.simulator_br,
-grb:e.realistic_ground_br,gsb:e.simulator_ground_br,premium:!(!e.is_premium&&!e.is_pack),event:!!e.event,crew:e.crew_total_count,hull:e.hull_armor,
-turret:e.turret_armor}}function D(e){const t=e.id.toLowerCase()+"_short";return L[lang]?.vehicles?.[t]||L.en?.vehicles?.[t]||e.name||e.id}function z(e){
-return"number"==typeof e&&Number.isFinite(e)?e.toFixed(1):"—"}function M(e){return"https://wiki.warthunder.com/unit/"+encodeURIComponent(e.id)}
-async function j(e){const t=new AbortController,a=setTimeout(()=>t.abort(),25e3);try{const a=await fetch(e,{signal:t.signal})
-;if(!a.ok)throw new Error(429===a.status?i("Anfragelimit erreicht. Bitte später erneut versuchen.","Request limit reached. Please try later."):"HTTP "+a.status)
-;return await a.json()}finally{clearTimeout(a)}}async function x(e){const a="wt-names-v1-"+e,n=c(a,null);if(!(n?.data&&(L[e]=n.data,Date.now()-n.at<t))){try{
-const t=await j("https://raw.githubusercontent.com/Sgambe33/WT-Vehicle-Data-Extract/master/locales/"+e+".json");if(!t.vehicles)throw new Error("Names");L[e]={
-vehicles:t.vehicles,weapons:t.weapons||{}},u(a,{at:Date.now(),data:L[e]})}catch{}"nations"!==p&&"info"!==p&&H()}}async function G(n){if(a[n]){f=n,p="catalog",
-b="all",y="",v="all",_=60,$=!0,k="",A=[],S=0,N();try{const a=await async function(a){if(I[a])return I[a];I[a]=(async()=>{
-const n=B[a]||c("wt-country-v1-"+a,null);if(n?.items?.length&&Date.now()-n.at<t)return B[a]=n,n;const r=[];let o=!1;try{for(let t=0;t<50;t++){
-const n=await j(e+"?country="+encodeURIComponent(a)+"&limit=200&page="+t+"&excludeKillstreak=true&excludeEventVehicles=true")
-;if(!Array.isArray(n)||n.some(e=>"string"!=typeof e.identifier||e.country!==a))throw new Error(i("Unerwartetes Datenformat.","Unexpected data format."))
-;if(r.push(...n.map(R)),f===a&&"catalog"===p&&(document.getElementById("catalog-results").textContent=i("Lade Fahrzeuge: ","Loading vehicles: ")+r.length),
-n.length<200){o=!0;break}}if(!o)throw new Error(i("Katalog zu groß; Laden abgebrochen.","Catalog too large; loading stopped."));const t={at:Date.now(),
-items:[...new Map(r.map(e=>[e.id,e])).values()]};return B[a]=t,u("wt-country-v1-"+a,t),t}catch(e){if(n?.items?.length)return B[a]=n,{...n,stale:!0};throw e}})()
-;try{return await I[a]}finally{delete I[a]}}(n);if(f!==n||"catalog"!==p)return;A=a.items,S=a.at,
-a.stale&&(k=i("Quelle nicht erreichbar. Letzter gespeicherter Stand wird angezeigt.","Source unavailable. Showing last saved data.")),A.forEach(e=>{
-h.has(e.id)&&(m[e.id]={...e,name:D(e)})}),u("wt-snapshots",m)}catch(e){if(f!==n||"catalog"!==p)return;k=i("Laden fehlgeschlagen: ","Loading failed: ")+e.message
-}finally{f===n&&"catalog"===p&&($=!1,H())}}}function N(){document.documentElement.lang=lang,
-document.getElementById("language").textContent="de"===lang?"EN":"DE",
-document.getElementById("language").setAttribute("aria-label",i("Switch to English","Auf Deutsch wechseln"))
-;const e=[["nations","⚑",i("Nationen","Nations")],["catalog","▦",i("Katalog","Catalog")],["favorites","★",i("Favoriten","Favorites")],["info","ⓘ","Info"]]
-;if(document.getElementById("navigation").innerHTML=e.map(([e,t,a])=>` <button data-view="${e}" ${p===e?'aria-current="page"':""} > <span aria-hidden="true">${t}</span> ${a} </button> `).join(""),
-document.getElementById("footer").textContent=i("Inoffizielles Fanprojekt · Daten: WT Vehicles API / Sgambe33","Unofficial fan project · Data: WT Vehicles API / Sgambe33"),
-document.getElementById("status").textContent=d?i("Browser-Speicher voll oder blockiert. Änderungen können beim Schließen verloren gehen.","Browser storage full or blocked. Changes may be lost when closing."):"",
-"nations"===p)return void(T.innerHTML=` <section class="hero"> <div class="eyebrow"> MILITARY TACTICAL / NATIONS </div> <h1> ${i("Wähle deine Nation.","Choose your nation.")} </h1> <p> ${i("Danach siehst du die Fahrzeuge ihres Forschungsbaums, einschließlich Premium- und Eventfahrzeugen aus der Datenquelle.","Explore its research nation, including premium and event vehicles available in the data source.")} </p> </section> <h2> ${i("Forschungsnationen","Research nations")} </h2> <div class="grid"> ${Object.keys(a).map(e=>` <button class="card nation-card" data-country="${e}" > <div class="symbol" aria-hidden="true"> ${a[e][2]} </div> <strong>${o(e)}</strong> <span> ${i("Fahrzeuge ansehen →","View vehicles →")} </span> </button> `).join("")} </div> `)
-;if("info"===p)return void(T.innerHTML=` <h1> ${i("Über den Katalog","About the catalog")} </h1> <div class="notice"> ${i("Der Katalog lädt alle von der Community-Quelle zurückgegebenen Fahrzeuge pro Forschungsnation. Testfahrzeuge und bestimmte Sondermodi sind ausgeschlossen. Vollständigkeit und Aktualität hängen vom Anbieter ab. Keine offizielle Gaijin-API.","The catalog loads all vehicles returned by the community source for each research nation. Test vehicles and certain special modes are excluded. Coverage and freshness depend on the provider. Not an official Gaijin API.")} </div> <div class="notice"> ${i("Geladene Länder und Namen werden für 24 Stunden gespeichert und beim nächsten Öffnen nach Ablauf erneut angefragt. Favoriten bleiben lokal auf diesem Gerät. Ohne gespeicherten Katalog ist Internet nötig.","Loaded nations and names are cached for 24 hours and requested again on the next visit after expiry. Favorites stay on this device. Internet is needed without a cached catalog.")} </div> <p> <a class="link" href="https://github.com/Sgambe33/WarThunder-Vehicles-API" target="_blank" rel="noopener noreferrer" >WT Vehicles API / Sgambe33 ↗</a> </p> <p> <a class="link" href="https://github.com/Sgambe33/WT-Vehicle-Data-Extract" target="_blank" rel="noopener noreferrer" > ${i("Namensdaten & Quelle (GPL-3.0) ↗","Name data & source (GPL-3.0) ↗")} </a> </p> `)
-;T.innerHTML=` <div class="eyebrow">VEHICLE CATALOG</div> <h1> ${"favorites"===p?i("Deine Favoriten","Your favorites"):o(f)} </h1> <div class="catalog-filters"> ${"catalog"===p?` <select id="choose-country" aria-label="Nation"> ${Object.keys(a).map(e=>` <option value="${e}" ${e===f?"selected":""} >${o(e)}</option> `).join("")} </select> `:""} <select id="choose-category" aria-label="${i("Fahrzeugbereich","Vehicle category")}" > ${Object.keys(n).map(e=>` <option value="${e}" ${e===b?"selected":""} >${s(e)}</option> `).join("")} </select> <select id="choose-rank" aria-label="${i("Rang","Rank")}" > <option value="all"> ${i("Alle Ränge","All ranks")} </option> ${Array.from({
-length:9
-},(e,t)=>t+1).map(e=>` <option value="${e}" ${v===String(e)?"selected":""} > ${i("Rang","Rank")} ${e} </option> `).join("")} </select> <select id="choose-mode" aria-label="${i("Spielmodus","Game mode")}" > ${[["ab","Arcade"],["rb",i("Realistisch","Realistic")],["sb","Simulator"]].map(([e,t])=>` <option value="${e}" ${w===e?"selected":""} >${t}</option> `).join("")} </select> <input id="catalog-search" type="search" value="${l(y)}" placeholder="${i("Fahrzeug suchen …","Search vehicles …")}" aria-label="${i("Fahrzeug suchen","Search vehicles")}" > </div> <p id="catalog-results" role="status"></p> <div class="grid" id="catalog-cards"></div> <div id="catalog-more" class="catalog-bar"></div> `,
-document.getElementById("choose-country")?.addEventListener("change",e=>{G(e.target.value)})
-;const t=[["choose-category",e=>b=e],["choose-rank",e=>v=e],["choose-mode",e=>w=e]];for(const[e,a]of t)document.getElementById(e).addEventListener("change",e=>{
-a(e.target.value),_=60,H()});document.getElementById("catalog-search").addEventListener("input",e=>{y=e.target.value,_=60,H()}),H()}function H(){
-if(!["catalog","favorites"].includes(p))return;const e="favorites"===p?[...h].map(e=>m[e]||{id:e,name:e,category:"other",country:"",rank:null
-}):A,t=y.toLocaleLowerCase().replace(/[\s_-]+/g,""),a=e.filter(e=>("all"===b||e.category===b)&&("all"===v||String(e.rank)===v)&&(D(e)+" "+e.id).toLocaleLowerCase().replace(/[\s_-]+/g,"").includes(t)).sort((e,t)=>(e.rank||0)-(t.rank||0)||D(e).localeCompare(D(t)))
-;document.getElementById("catalog-results").textContent=$&&"catalog"===p?i("Katalog wird geladen …","Loading catalog …"):k&&"catalog"===p?k:a.length+" "+i("Treffer","results")+(S&&"catalog"===p?" · "+i("Abgerufen: ","Retrieved: ")+new Date(S).toLocaleString("de"===lang?"de-DE":"en-GB"):"")
-;document.getElementById("catalog-cards").innerHTML=a.slice(0,_).map(e=>` <article class="card catalog-card"> <span class="badge"> ${l(o(e.country))} · ${s(e.category)} ${e.premium?" · PREMIUM":""} ${e.event?" · EVENT":""} </span> <h3>${l(D(e))}</h3> <p> ${i("Rang","Rank")} ${e.rank||"—"} · ${w.toUpperCase()} </p> <div class="catalog-br"> BR ${z(e[w])} </div> <div class="actions"> <a class="link" href="${M(e)}" target="_blank" rel="noopener noreferrer" >Wiki ↗</a> <button class="star" data-star="${l(e.id)}" aria-pressed="${h.has(e.id)}" aria-label="${i("Favorit umschalten: ","Toggle favorite: ")+l(D(e))}" >${h.has(e.id)?"★":"☆"}</button> </div> <button class="detail-button gold" data-inspect="${l(e.id)}" > ${i("Fahrzeugdetails →","Vehicle details →")} </button> </article> `).join("")||($?"":` <div class="empty"> ${i("Keine passenden Fahrzeuge.","No matching vehicles.")} </div> `),
-document.getElementById("catalog-more").innerHTML=!k||"catalog"!==p||$||A.length?a.length>_?` <button data-more> ${i("Weitere Fahrzeuge laden","Show more vehicles")} (${Math.min(60,a.length-_)}) </button> `:"":` <button data-retry> ${i("Erneut versuchen","Try again")} </button> `
-}C.addEventListener("close",()=>{++E}),document.getElementById("language").addEventListener("click",()=>{lang="de"===lang?"en":"de";try{
-localStorage.setItem("wt-language",lang)}catch{d=!0}N(),x(lang)}),document.addEventListener("click",a=>{
-const n=a.target.closest("[data-country], [data-view], [data-star], [data-inspect], [data-more], [data-retry]");if(!n)return
-;if(n.dataset.country)return void G(n.dataset.country);if(n.dataset.view){const e=n.dataset.view;return"catalog"===e?void G(f):(p=e,$=!1,b="all",v="all",y="",
-_=60,N(),void window.scrollTo({top:0}))}if(n.hasAttribute("data-retry"))return void G(f);if(n.hasAttribute("data-more"))return _+=60,void H()
-;if(n.dataset.inspect)return void async function(a){const n=++E,r=A.find(e=>e.id===a)||m[a]||{id:a};let s=null;function d(e=""){
-const t=s||r,a=!!s,n=a?"air"===F(t.vehicle_type):"air"===r.category,c=[[i("Nation","Nation"),o(t.country||r.country||"")],[i("Rang","Rank"),a?t.era:t.rank],["BR · "+(n?i("Luft","Air"):i("Boden/Flotte","Ground/Fleet"))+" · AB",z(a?t.arcade_br:t.ab)],["BR · RB",z(a?t.realistic_br:t.rb)],["BR · SB",z(a?t.simulator_br:t.sb)]]
-;n&&(a?t.realistic_ground_br:t.grb)!==(a?t.realistic_br:t.rb)&&c.push(["BR · "+i("Boden-RB","Ground RB"),z(a?t.realistic_ground_br:t.grb)]),
-n&&(a?t.simulator_ground_br:t.gsb)!==(a?t.simulator_br:t.sb)&&c.push(["BR · "+i("Boden-SB","Ground SB"),z(a?t.simulator_ground_br:t.gsb)])
-;const d=a?t.crew_total_count:t.crew;d&&c.push([i("Besatzung","Crew"),d])
-;const u=[["hull_armor",i("Wanne F/S/H","Hull F/S/R")],["turret_armor",i("Turm F/S/H","Turret F/S/R")]];for(const[e,n]of u){
-const r=a?t[e]:t["hull_armor"===e?"hull":"turret"];Array.isArray(r)&&r.length&&c.push([n,r.join(" / ")+" mm"])}if(a){
-t.mass&&c.push([i("Masse","Mass"),(t.mass/1e3).toLocaleString("de"===lang?"de-DE":"en-GB")+" t"]);const e=[["max_speed_ab","AB"],["max_speed_rb_sb","RB/SB"]]
-;for(const[a,n]of e)"number"==typeof t.engine?.[a]&&c.push([i("Geschwindigkeit · ","Speed · ")+n,t.engine[a]+" km/h"])
-;Array.isArray(t.weapons)&&t.weapons.forEach(e=>{const t=e.name.toLowerCase()
-;c.push([i("Bewaffnung","Armament"),(e.count||1)+" × "+(L[lang]?.weapons?.[t]||L.en?.weapons?.[t]||e.name)])}),
-c.push([i("Datenversion","Data version"),t.version||"—"])}
-C.innerHTML=` <button id="close-catalog-detail" autofocus> ${i("Schließen","Close")} ✕ </button> <h2 id="detail-title"> ${l(D(r))} </h2> <table> <tbody> ${c.map(([e,t])=>` <tr> <th scope="row">${l(e)}</th> <td>${l(t??"—")}</td> </tr> `).join("")} </tbody> </table> <p role="status" class="notice"> ${l(e||i("Community-Daten. Fehlende Werte werden nicht ergänzt. Modus und Ausbau können Werte beeinflussen.","Community data. Missing values are not invented. Mode and modifications can affect values."))} </p> <a class="link" href="${M(r)}" target="_blank" rel="noopener noreferrer" > ${i("Offizielles Wiki ↗","Official wiki ↗")} </a> `,
-document.getElementById("close-catalog-detail").onclick=()=>{++E,C.close()}}d(i("Weitere Details werden geladen …","Loading further details …")),C.showModal()
-;const g="wt-detail-v1-"+a,h=c(g,null);try{if(s=h&&Date.now()-h.at<t?h.data:await j(e+"/"+encodeURIComponent(a)),s.identifier!==a)throw new Error("Data")
-;h&&s===h.data||u(g,{at:Date.now(),data:s}),n===E&&C.open&&d()}catch{s=h?.data||null,
-n===E&&C.open&&d(i("Detailquelle nicht erreichbar. Verfügbare gespeicherte Werte werden angezeigt.","Detail source unavailable. Showing available cached values."))
-}}(n.dataset.inspect);const r=n.dataset.star;if(r){if(h.has(r))h.delete(r);else{h.add(r);const e=A.find(e=>e.id===r)||m[r];e&&(m[r]={...e,name:D(e)})}
-u("wt-favorites",[...h]),u("wt-snapshots",m),"favorites"===p?H():(n.textContent=h.has(r)?"★":"☆",n.setAttribute("aria-pressed",String(h.has(r)))),
-document.getElementById("status").textContent=d?i("Speichern auf diesem Gerät nicht möglich.","Saving on this device is unavailable."):""}}),N(),x("en"),
-"en"!==lang&&x(lang)})();
+(() => {
+  if (window.wtBRControls) return;
+  window.wtBRControls = true;
+
+  const root = document.getElementById('content');
+  if (!root) return;
+
+  const t = (de, en) =>
+    document.documentElement.lang === 'en' ? en : de;
+
+  function read(key, fallback) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  const saved = read('wt-br-range-v1', {});
+
+  const valid = value =>
+    typeof value === 'number' &&
+    Number.isFinite(value) &&
+    value >= 0;
+
+  let minimum = valid(saved?.minimum)
+    ? saved.minimum
+    : null;
+
+  let maximum = valid(saved?.maximum)
+    ? saved.maximum
+    : null;
+
+  if (
+    minimum !== null &&
+    maximum !== null &&
+    minimum > maximum
+  ) {
+    maximum = minimum;
+  }
+
+  window.wtBRFilter = (vehicle, mode) => {
+    if (minimum === null && maximum === null) {
+      return true;
+    }
+
+    const value = vehicle[mode];
+
+    return valid(value) &&
+      (minimum === null || value >= minimum) &&
+      (maximum === null || value <= maximum);
+  };
+
+  function save() {
+    try {
+      localStorage.setItem(
+        'wt-br-range-v1',
+        JSON.stringify({ minimum, maximum })
+      );
+    } catch {}
+  }
+
+  function apply() {
+    save();
+    refresh();
+
+    root.querySelector('#catalog-search')?.dispatchEvent(
+      new Event('input', { bubbles: true })
+    );
+  }
+
+  let lastMarkup = '';
+
+  function refresh() {
+    const filters = root.querySelector('.catalog-filters');
+    if (!filters) return;
+
+    let controls = filters.querySelector('.wt-br-controls');
+
+    if (!controls) {
+      controls = document.createElement('div');
+      controls.className = 'wt-br-controls';
+      filters.append(controls);
+      lastMarkup = '';
+    }
+
+    const mode =
+      root.querySelector('#choose-mode')?.value || 'rb';
+
+    const values = [];
+
+    const countries = [
+      'germany',
+      'usa',
+      'britain',
+      'ussr',
+      'france',
+      'italy',
+      'japan',
+      'china',
+      'sweden',
+      'israel'
+    ];
+
+    for (const country of countries) {
+      const data = read('wt-country-v1-' + country, null);
+
+      if (Array.isArray(data?.items)) {
+        data.items.forEach(vehicle => {
+          if (valid(vehicle[mode])) {
+            values.push(vehicle[mode]);
+          }
+        });
+      }
+    }
+
+    const snapshots = read('wt-snapshots', {});
+
+    if (snapshots && typeof snapshots === 'object') {
+      Object.values(snapshots).forEach(vehicle => {
+        if (vehicle && valid(vehicle[mode])) {
+          values.push(vehicle[mode]);
+        }
+      });
+    }
+
+    if (minimum !== null) values.push(minimum);
+    if (maximum !== null) values.push(maximum);
+
+    const ratings = [...new Set(values)].sort(
+      (a, b) => a - b
+    );
+
+    const options = selected =>
+      `<option value="all">${t('Beliebig', 'Any')}</option>` +
+      ratings.map(value => `
+        <option
+          value="${value}"
+          ${value === selected ? 'selected' : ''}
+        >
+          ${value.toFixed(1)}
+        </option>
+      `).join('');
+
+    const markup = `
+      <label>
+        ${t('BR-Minimum', 'Minimum BR')}
+
+        <select
+          id="wt-br-minimum"
+          aria-label="${t('BR-Minimum', 'Minimum BR')}"
+        >
+          ${options(minimum)}
+        </select>
+      </label>
+
+      <label>
+        ${t('BR-Maximum', 'Maximum BR')}
+
+        <select
+          id="wt-br-maximum"
+          aria-label="${t('BR-Maximum', 'Maximum BR')}"
+        >
+          ${options(maximum)}
+        </select>
+      </label>
+
+      <p class="wt-br-note">
+        ${t(
+          'Filter für den gewählten Spielmodus. Bei aktivem BR-Filter werden Fahrzeuge ohne BR-Wert ausgeblendet.',
+          'Filter for the selected game mode. Vehicles without a BR value are hidden when a BR filter is active.'
+        )}
+      </p>
+
+      <button class="wt-br-reset" id="wt-br-reset">
+        ${t('BR-Filter zurücksetzen', 'Reset BR filter')}
+      </button>
+    `;
+
+    if (markup === lastMarkup) return;
+
+    lastMarkup = markup;
+    controls.innerHTML = markup;
+
+    controls.querySelector('#wt-br-minimum')
+      .addEventListener('change', event => {
+        minimum = event.target.value === 'all'
+          ? null
+          : Number(event.target.value);
+
+        if (
+          minimum !== null &&
+          maximum !== null &&
+          minimum > maximum
+        ) {
+          maximum = minimum;
+        }
+
+        apply();
+      });
+
+    controls.querySelector('#wt-br-maximum')
+      .addEventListener('change', event => {
+        maximum = event.target.value === 'all'
+          ? null
+          : Number(event.target.value);
+
+        if (
+          maximum !== null &&
+          minimum !== null &&
+          maximum < minimum
+        ) {
+          minimum = maximum;
+        }
+
+        apply();
+      });
+
+    controls.querySelector('#wt-br-reset')
+      .addEventListener('click', () => {
+        minimum = null;
+        maximum = null;
+        apply();
+      });
+  }
+
+  new MutationObserver(refresh).observe(root, {
+    childList: true,
+    subtree: true
+  });
+
+  new MutationObserver(refresh).observe(
+    document.documentElement,
+    {
+      attributes: true,
+      attributeFilter: ['lang']
+    }
+  );
+
+  refresh();
+})();
 </script>
-<!-- WT VEHICLE IMAGES -->
-<style>
- .wt-photo{position:relative;display:grid;place-items:center;height:170px;margin:16px 0;overflow:hidden;border:1px solid #344437;border-radius:12px;background:radial-gradient( ellipse at center,#2b3a2e,#101710 );}
-.wt-photo img{width:100%;height:100%;object-fit:contain;padding:12px;opacity:0;transition:opacity .2s;}
-.wt-photo.ready img{opacity:1;}
-.wt-photo span{position:absolute;padding:12px;color:#abb8a9;font-size:13px;text-align:center;}
-.wt-photo.ready span{display:none;}
-.wt-photo.failed img{display:none;}
-#vehicle-detail .wt-photo{height:240px;}
-</style>
-<script>
-(()=>{if(window.wtVehicleImages)return;window.wtVehicleImages=!0;const e=document.getElementById("content"),t=document.getElementById("vehicle-detail")
-;if(!e||!t)return;const n=(e,t)=>"en"===document.documentElement.lang?t:e;function o(e,o,r,a){if(!o||e.querySelector(".wt-photo"))return
-;const c=document.createElement("div");c.className="wt-photo";const i=document.createElement("img");i.alt=r,i.loading=e===t?"eager":"lazy",i.decoding="async",
-i.referrerPolicy="no-referrer";const d=document.createElement("span");d.textContent=n("Bild wird geladen …","Loading image …"),i.addEventListener("load",()=>{
-c.classList.add("ready")}),i.addEventListener("error",()=>{c.classList.add("failed"),d.textContent=n("Kein Bild verfügbar","Image unavailable")}),
-i.src="https://wtvehiclesapi.duckdns.org/assets/images/"+encodeURIComponent(o.toLowerCase())+".png",c.append(i,d),e.insertBefore(c,a)}function r(){
-e.querySelectorAll(".catalog-card").forEach(e=>{const t=e.querySelector("[data-inspect]"),n=e.querySelector("h3");t&&n&&o(e,t.dataset.inspect,n.textContent,n)})
-;const n=t.querySelector("#detail-title"),r=t.querySelector('a[href*="wiki.warthunder.com/unit/"]');if(n&&r)try{
-const e=new URL(r.href),a=decodeURIComponent(e.pathname.split("/").pop());o(t,a,n.textContent,n.nextSibling)}catch{}}const a=new MutationObserver(r)
-;a.observe(e,{childList:!0,subtree:!0}),a.observe(t,{childList:!0,subtree:!0}),r()})();
-</script>
-<!-- /WT VEHICLE IMAGES -->
-<!-- WT VEHICLE COMPARE -->
-<style>
- .wt-compare-panel{margin:18px 0;padding:16px;border:1px solid #344437;border-radius:14px;background:#172019;}
-.wt-compare-panel h2{margin:0 0 10px;font-size:20px;}
-.wt-compare-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
-.wt-compare-message{color:#abb8a9;font-size:13px;}
-.wt-compare-pick{width:100%;margin-top:8px;}
-.wt-compare-pick[aria-pressed="true"]{border-color:#dfb968;color:#dfb968;background:#dfb96820;}
-button:disabled{opacity:.45;cursor:default;}
-#wt-compare-dialog{width:min(760px,95vw);max-height:88vh;overflow:auto;border:1px solid #344437;border-radius:16px;padding:20px;background:#172019;color:#edf2e9;}
-#wt-compare-dialog::backdrop{background:#000b;}
-.wt-compare-scroll{overflow-x:auto;}
-#wt-compare-dialog table{width:100%;min-width:440px;border-collapse:collapse;table-layout:fixed;}
-#wt-compare-dialog th,#wt-compare-dialog td{padding:12px 8px;border-bottom:1px solid #344437;vertical-align:top;text-align:left;overflow-wrap:anywhere;}
-#wt-compare-dialog thead th{color:#dfb968;}
-#wt-compare-dialog tbody th{color:#abb8a9;font-weight:500;}
-</style>
-<script>
-(()=>{if(window.wtVehicleCompare)return;window.wtVehicleCompare=!0;const e=document.getElementById("content");if(!e)return
-;const t=(e,t)=>"en"===document.documentElement.lang?t:e,a=e=>String(e??"—").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[e])),n=(e,t)=>{try{return JSON.parse(localStorage.getItem(e))??t}catch{return t}};let r=n("wt-compare-selection",[]);Array.isArray(r)||(r=[]),
-r=r.filter(e=>e&&"string"==typeof e.id&&"string"==typeof e.name).slice(0,2);const o=document.createElement("section");o.className="wt-compare-panel",e.before(o)
-;const i=document.createElement("dialog");i.id="wt-compare-dialog",i.setAttribute("aria-labelledby","wt-compare-title"),document.body.append(i);let c=0,s=""
-;const l={germany:["Deutschland","Germany"],usa:["USA","USA"],britain:["Großbritannien","Great Britain"],ussr:["UdSSR","USSR"],france:["Frankreich","France"],
-italy:["Italien","Italy"],japan:["Japan","Japan"],china:["China","China"],sweden:["Schweden","Sweden"],israel:["Israel","Israel"]};function d(e){
-const t="en"===document.documentElement.lang?"en":"de",a=n("wt-names-v1-"+t,null)?.data?.vehicles;return a?.[e.id.toLowerCase()+"_short"]||e.name}function u(){
-const n=` <h2>${t("Fahrzeugvergleich","Vehicle comparison")}</h2> <p class="wt-compare-message"> ${t("Wähle zwei Fahrzeuge in den Karten. Du kannst dabei die Nation wechseln.","Select two vehicles on their cards. You can switch nations between selections.")} </p> <div class="wt-compare-controls"> ${r.map(e=>` <button data-compare-remove="${a(e.id)}" aria-label="${a(t("Entfernen: ","Remove: ")+d(e))}" > ${a(d(e))} × </button> `).join("")} <button class="gold" data-compare-open ${2!==r.length?"disabled":""} > ${t("Vergleichen","Compare")} (${r.length}/2) </button> </div> `
-;n!==s&&(s=n,o.innerHTML=n),e.querySelectorAll(".catalog-card").forEach(e=>{const a=e.querySelector("[data-inspect]");if(!a)return;const n=a.dataset.inspect
-;let o=e.querySelector("[data-compare-pick]");o||(o=document.createElement("button"),o.className="wt-compare-pick",o.dataset.comparePick=n,e.append(o))
-;const i=r.some(e=>e.id===n),c=i?t("✓ Für Vergleich ausgewählt","✓ Selected for comparison"):t("+ Zum Vergleich","+ Add to comparison")
-;o.textContent!==c&&(o.textContent=c),o.getAttribute("aria-pressed")!==String(i)&&o.setAttribute("aria-pressed",String(i));const s=!i&&2===r.length
-;o.disabled!==s&&(o.disabled=s)})}async function m(e){const t="wt-detail-v1-"+e.id,a=n(t,null);if(a?.data?.identifier===e.id&&Date.now()-a.at<864e5)return{
-data:a.data};const r=new AbortController,o=setTimeout(()=>{r.abort()},25e3);try{
-const a=await fetch("https://wtvehiclesapi.duckdns.org/api/vehicles/"+encodeURIComponent(e.id),{signal:r.signal});if(!a.ok)throw new Error("HTTP "+a.status)
-;const n=await a.json();if(n.identifier!==e.id)throw new Error("Data");try{localStorage.setItem(t,JSON.stringify({at:Date.now(),data:n}))}catch{}return{data:n}
-}catch{if(a?.data?.identifier===e.id)return{data:a.data,unavailable:!0};const t=function(e){const t=n("wt-snapshots",{});if(t?.[e])return t[e]
-;for(const t of Object.keys(l)){const a=n("wt-country-v1-"+t,null)?.items?.find(t=>t.id===e);if(a)return a}return{id:e}}(e.id);return{data:{country:t.country,
-era:t.rank,arcade_br:t.ab,realistic_br:t.rb,simulator_br:t.sb,crew_total_count:t.crew,hull_armor:t.hull,turret_armor:t.turret},unavailable:!0}}finally{
-clearTimeout(o)}}document.addEventListener("click",e=>{
-const o=e.target.closest("[data-compare-pick],[data-compare-remove],[data-compare-open],[data-compare-close]");if(!o||o.disabled)return
-;if(o.hasAttribute("data-compare-close"))return++c,void i.close();if(o.hasAttribute("data-compare-open"))return void async function(){if(2!==r.length)return
-;const e=r.map(e=>({...e})),o=++c
-;i.innerHTML=` <button data-compare-close> ${t("Schließen","Close")} ✕ </button> <h2 id="wt-compare-title"> ${t("Fahrzeugvergleich","Vehicle comparison")} </h2> <p role="status"> ${t("Details werden geladen …","Loading details …")} </p> `,
-i.showModal();const s=await Promise.all(e.map(m));if(o!==c||!i.open)return
-;const u=s.map(e=>e.data),p=e=>"number"==typeof e&&Number.isFinite(e)?e.toLocaleString("en"===document.documentElement.lang?"en-GB":"de-DE"):"—",h=e=>"number"==typeof e&&Number.isFinite(e)?e.toFixed(1):"—",b=e=>Array.isArray(e)&&e.length?e.join(" / ")+" mm":"—",g=[[t("Nation","Nation"),e=>l[e.country]?t(...l[e.country]):e.country||"—"],[t("Fahrzeugtyp (Quelle)","Vehicle type (source)"),e=>e.vehicle_type||"—"],[t("Rang","Rank"),e=>p(e.era)],["BR · AB",e=>h(e.arcade_br)],["BR · RB",e=>h(e.realistic_br)],["BR · SB",e=>h(e.simulator_br)],[t("Boden-BR · RB","Ground BR · RB"),e=>h(e.realistic_ground_br)],[t("Boden-BR · SB","Ground BR · SB"),e=>h(e.simulator_ground_br)],[t("Besatzung","Crew"),e=>p(e.crew_total_count)],[t("Masse","Mass"),e=>"number"==typeof e.mass?p(e.mass/1e3)+" t":"—"],[t("Geschwindigkeit · AB","Speed · AB"),e=>"number"==typeof e.engine?.max_speed_ab?p(e.engine.max_speed_ab)+" km/h":"—"],[t("Geschwindigkeit · RB/SB","Speed · RB/SB"),e=>"number"==typeof e.engine?.max_speed_rb_sb?p(e.engine.max_speed_rb_sb)+" km/h":"—"],[t("Wanne F/S/H","Hull F/S/R"),e=>b(e.hull_armor)],[t("Turm F/S/H","Turret F/S/R"),e=>b(e.turret_armor)],[t("Bewaffnung","Armament"),e=>{
-const t="en"===document.documentElement.lang?"en":"de",a=n("wt-names-v1-"+t,null)?.data?.weapons||{}
-;return Array.isArray(e.weapons)&&e.weapons.length?e.weapons.map(e=>(e.count||1)+" × "+(a[String(e.name).toLowerCase()]||e.name||"—")).join("; "):"—"
-}],[t("Datenversion","Data version"),e=>e.version||"—"]]
-;i.innerHTML=` <button data-compare-close> ${t("Schließen","Close")} ✕ </button> <h2 id="wt-compare-title"> ${t("Fahrzeugvergleich","Vehicle comparison")} </h2> <div class="wt-compare-scroll" tabindex="0" role="region" aria-label="${t("Vergleichstabelle, seitlich scrollbar","Comparison table, scroll horizontally")}" > <table> <thead> <tr> <th scope="col"> ${t("Merkmal","Attribute")} </th> ${e.map(e=>` <th scope="col">${a(d(e))}</th> `).join("")} </tr> </thead> <tbody> ${g.map(([e,t])=>` <tr> <th scope="row">${a(e)}</th> ${u.map(e=>` <td>${a(t(e))}</td> `).join("")} </tr> `).join("")} </tbody> </table> </div> <p class="wt-compare-message" role="status"> ${s.some(e=>e.unavailable)?t("Detailquelle teilweise nicht erreichbar. Gespeicherte Werte werden verwendet. ","Detail source partially unavailable. Using saved values. "):""} ${t("Community-Daten. — bedeutet: kein Wert vorhanden. Fahrzeugtyp, Spielmodus und Ausbau beim Vergleich beachten.","Community data. — means no value is available. Consider vehicle type, game mode and modifications.")} </p> `
-}();const s=o.dataset.comparePick||o.dataset.compareRemove;if(r.some(e=>e.id===s))r=r.filter(e=>e.id!==s);else if(r.length<2){
-const e=o.closest(".catalog-card")?.querySelector("h3")?.textContent||s;r.push({id:s,name:e})}!function(){try{
-localStorage.setItem("wt-compare-selection",JSON.stringify(r))}catch{}u()}()}),i.addEventListener("close",()=>{++c}),new MutationObserver(u).observe(e,{
-childList:!0,subtree:!0}),new MutationObserver(u).observe(document.documentElement,{attributes:!0,attributeFilter:["lang"]}),u()})();
-</script>
-<!-- /WT VEHICLE COMPARE -->
-<!-- WT LINEUP PLANNER -->
-<style>
- .wt-lineup-pick{width:100%;margin-top:8px}
-.wt-lineup-pick[aria-pressed="true"]{border-color:#dfb968;color:#dfb968}
-#wt-lineup-dialog{width:min(680px,95vw);max-height:88dvh;overflow:auto;padding:20px;border:1px solid #dfb968;border-radius:18px;background:#172019;color:#edf2e9}
-#wt-lineup-dialog::backdrop{background:#000b}
-.wt-lineup-controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.wt-lineup-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.wt-lineup-fields label{font-size:13px;color:#abb8a9}
-.wt-lineup-fields input,.wt-lineup-fields select{margin-top:6px}
-.wt-lineup-slot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #344437}
-.wt-lineup-slot small{display:block;color:#abb8a9;margin-top:5px}
-.wt-lineup-result{padding:16px;margin:16px 0;border:1px solid #344437;border-radius:12px;color:#dfb968;font-size:22px;font-weight:800}
-#wt-lineup-message{color:#dfb968;font-size:13px}
-@media(max-width:420px){.wt-lineup-fields{grid-template-columns:1fr}
-}
-</style>
-<script>
-(()=>{if(window.wtLineupPlanner)return;window.wtLineupPlanner=!0;const e=document.getElementById("content"),t=document.getElementById("navigation")
-;if(!e||!t)return;const n=(e,t)=>"en"===document.documentElement.lang?t:e,i=e=>String(e??"—").replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",
-'"':"&quot;","'":"&#39;"}[e])),a=(e,t)=>{try{return JSON.parse(localStorage.getItem(e))??t}catch{return t}},l=(e,t)=>{try{
-return localStorage.setItem(e,JSON.stringify(t)),!0}catch{return!1}},s=["germany","usa","britain","ussr","france","italy","japan","china","sweden","israel"],r={
-germany:["Deutschland","Germany"],usa:["USA","USA"],britain:["Großbritannien","Great Britain"],ussr:["UdSSR","USSR"],france:["Frankreich","France"],
-italy:["Italien","Italy"],japan:["Japan","Japan"],china:["China","China"],sweden:["Schweden","Sweden"],israel:["Israel","Israel"]};function u(e){
-e&&"object"==typeof e||(e={});let t=Array.isArray(e.vehicles)?e.vehicles.filter(e=>e&&"string"==typeof e.id&&s.includes(e.country)):[];const n=t[0]?.country
-;return t=[...new Map(t.filter(e=>e.country===n).map(e=>[e.id,e])).values()],{id:"string"==typeof e.id?e.id:"",name:"string"==typeof e.name?e.name:"",
-mode:["ab","rb","sb"].includes(e.mode)?e.mode:"rb",battle:"ground"===e.battle?"ground":"standard",vehicles:t}}
-let d=u(a("wt-lineup-draft-v1",{})),o=a("wt-lineups-v1",[]);o=Array.isArray(o)?o.map(u).filter(e=>e.id&&e.name):[];let c=""
-;const p=document.createElement("dialog");function h(e){const t="en"===document.documentElement.lang?"en":"de"
-;return a("wt-names-v1-"+t,null)?.data?.vehicles?.[e.id.toLowerCase()+"_short"]||e.name||e.id}function m(e){for(const t of s){
-const n=a("wt-country-v1-"+t,null)?.items?.find(t=>t.id===e);if(n)return n}return a("wt-snapshots",{})?.[e]}function g(e){
-const t="rb"===d.mode?"grb":"sb"===d.mode?"gsb":null;return"ground"===d.battle&&"air"===e.category&&t?e[t]:e[d.mode]}function v(e){
-return"number"==typeof e&&Number.isFinite(e)?e.toFixed(1):"—"}function b(){
-l("wt-lineup-draft-v1",d)||(c=n("Speichern auf diesem Gerät nicht möglich.","Saving on this device is unavailable."))}function f(){
-let i=t.querySelector("[data-lineup-open]");i||(i=document.createElement("button"),i.dataset.lineupOpen="",t.append(i))
-;const a=`<span aria-hidden="true">▤</span>${n("Lineups","Lineups")} (${d.vehicles.length})`;i.innerHTML!==a&&(i.innerHTML=a),
-e.querySelectorAll(".catalog-card").forEach(e=>{const t=e.querySelector("[data-inspect]");if(!t)return;let i=e.querySelector("[data-lineup-pick]")
-;i||(i=document.createElement("button"),i.className="wt-lineup-pick",i.dataset.lineupPick=t.dataset.inspect,e.append(i))
-;const a=d.vehicles.some(e=>e.id===t.dataset.inspect),l=a?n("✓ Im Lineup","✓ In lineup"):n("+ Zum Lineup","+ Add to lineup")
-;i.textContent!==l&&(i.textContent=l),i.getAttribute("aria-pressed")!==String(a)&&i.setAttribute("aria-pressed",String(a))})}function w(){
-const e=d.vehicles.map(g),t=e.filter(e=>"number"==typeof e&&Number.isFinite(e)),a=t.length?Math.max(...t):null,l=t.length<e.length,s=d.vehicles[0]?.country
-;p.innerHTML=`<button data-lineup-close>${n("Schließen","Close")} ✕</button><h2 id="wt-lineup-title">${n("Lineup-Planer","Lineup planner")}</h2> <label>${n("Gespeicherte Aufstellungen","Saved lineups")}<select id="wt-lineup-saved"><option value="">${n("Aufstellung laden …","Load lineup …")}</option>${o.map(e=>`<option value="${i(e.id)}">${i(e.name)} (${e.vehicles.length})</option>`).join("")}</select></label> <div class="wt-lineup-fields"><label>${n("Name","Name")}<input id="wt-lineup-name" maxlength="80" value="${i(d.name)}" placeholder="${n("Deutschland Boden-RB","Germany Ground RB")}"></label> <label>${n("Spielmodus","Game mode")}<select id="wt-lineup-mode">${[["ab","Arcade"],["rb",n("Realistisch","Realistic")],["sb","Simulator"]].map(([e,t])=>`<option value="${e}" ${d.mode===e?"selected":""}>${t}</option>`).join("")}</select></label> <label>${n("BR-Basis","BR basis")}<select id="wt-lineup-battle"><option value="standard" ${"standard"===d.battle?"selected":""}>${n("Standard-Fahrzeug-BR","Standard vehicle BR")}</option><option value="ground" ${"ground"===d.battle?"selected":""}>${n("Bodengefechte (Flugzeug-BR)","Ground battles (aircraft BR)")}</option></select></label></div> <div class="wt-lineup-result">${n("Höchster ausgewählter BR","Highest selected BR")}: ${v(a)} · ${d.mode.toUpperCase()}${l?" · "+n("unvollständig","incomplete"):""}</div> <p>${s?i(n(...r[s]))+" · ":""}${d.vehicles.length} ${n("Fahrzeuge","vehicles")}</p> <div>${d.vehicles.map(e=>`<div class="wt-lineup-slot"><div><strong>${i(h(e))}</strong><small>BR ${v(g(e))}</small></div><button data-lineup-remove="${i(e.id)}" aria-label="${i(n("Entfernen: ","Remove: ")+h(e))}">×</button></div>`).join("")||`<p>${n("Noch keine Fahrzeuge. Schließe dieses Fenster und tippe auf den Fahrzeugkarten auf „+ Zum Lineup“.","No vehicles yet. Close this window and tap “+ Add to lineup” on vehicle cards.")}</p>`}</div> <div class="wt-lineup-controls"><button class="gold" data-lineup-save>${n("Aufstellung speichern","Save lineup")}</button><button data-lineup-new>${n("Neue Aufstellung","New lineup")}</button></div> <p id="wt-lineup-message" role="status">${i(c)}</p><p class="notice">${n("Alle Fahrzeuge müssen derselben Forschungsnation angehören. Der angezeigte Wert ist der höchste BR deiner Auswahl, keine vollständige Matchmaking-Berechnung. Bei fehlenden Werten ist das Ergebnis unvollständig. Gespeicherte Aufstellungen bleiben auf diesem Gerät.","All vehicles must belong to the same research nation. The displayed value is the highest BR selected, not a complete matchmaking calculation. Missing values make the result incomplete. Saved lineups stay on this device.")}</p>`,
-document.getElementById("wt-lineup-name").addEventListener("input",e=>{d.name=e.target.value,b()}),
-document.getElementById("wt-lineup-mode").addEventListener("change",e=>{d.mode=e.target.value,b(),w()}),
-document.getElementById("wt-lineup-battle").addEventListener("change",e=>{d.battle=e.target.value,b(),w()}),
-document.getElementById("wt-lineup-saved").addEventListener("change",e=>{const t=o.find(t=>t.id===e.target.value);t&&(d=u(JSON.parse(JSON.stringify(t))),
-d.vehicles=d.vehicles.map(e=>m(e.id)||e),c=n("Aufstellung geladen.","Lineup loaded."),b(),f(),w())})}function y(){w(),p.open||p.showModal()}
-p.id="wt-lineup-dialog",p.setAttribute("aria-labelledby","wt-lineup-title"),document.body.append(p),document.addEventListener("click",e=>{
-const t=e.target.closest("[data-lineup-open],[data-lineup-close],[data-lineup-pick],[data-lineup-remove],[data-lineup-save],[data-lineup-new]");if(!t)return
-;if(t.hasAttribute("data-lineup-open"))return void y();if(t.hasAttribute("data-lineup-close"))return void p.close()
-;if(t.hasAttribute("data-lineup-new"))return d=u({}),
-c=n("Neue Aufstellung. Gespeicherte Aufstellungen bleiben erhalten.","New lineup. Saved lineups are retained."),b(),f(),void w()
-;if(t.hasAttribute("data-lineup-save")){
-if(d.name=d.name.trim(),!d.name||!d.vehicles.length)return c=n("Bitte einen Namen eingeben und mindestens ein Fahrzeug hinzufügen.","Enter a name and add at least one vehicle."),
-void w();const e=JSON.parse(JSON.stringify(d));e.id=e.id||"lineup-"+Date.now()+"-"+Math.random().toString(36).slice(2,8)
-;const t=o.filter(t=>t.id!==e.id).concat(e);return l("wt-lineups-v1",t)?(o=t,d.id=e.id,b(),
-c=n("Aufstellung gespeichert.","Lineup saved.")):c=n("Speichern auf diesem Gerät nicht möglich.","Saving on this device is unavailable."),void w()}
-const i=t.dataset.lineupPick||t.dataset.lineupRemove;if(d.vehicles.some(e=>e.id===i))d.vehicles=d.vehicles.filter(e=>e.id!==i),c="";else{const e=m(i)
-;if(!e||!s.includes(e.country))return c=n("Bitte zuerst die Nation dieses Fahrzeugs öffnen, damit seine Daten geladen werden.","Open this vehicle’s nation first to load its data."),
-void y()
-;if(d.vehicles.length&&d.vehicles[0].country!==e.country)return c=n("Dieses Fahrzeug gehört zu einer anderen Nation. Speichere dein Lineup und starte eine neue Aufstellung.","This vehicle belongs to another nation. Save your lineup and start a new one."),
-void y();d.vehicles.push({...e,name:h(e)}),c=""}b(),f(),p.open&&w()});const S=new MutationObserver(f);S.observe(e,{childList:!0,subtree:!0}),S.observe(t,{
-childList:!0}),new MutationObserver(()=>{f(),p.open&&w()}).observe(document.documentElement,{attributes:!0,attributeFilter:["lang"]}),f()})();
-</script>
-<!-- /WT LINEUP PLANNER -->
-<!-- WT HOME SCREEN -->
-<script>
-(()=>{if(window.wtHomeScreen)return;window.wtHomeScreen=!0;const e=document.querySelector("main"),n=document.createElement("p");n.className="notice",
-n.setAttribute("role","status"),e&&e.prepend(n);let t=!1;function a(){const e="en"===document.documentElement.lang;n.hidden=navigator.onLine&&!t,
-n.textContent=navigator.onLine?t?e?"Offline setup failed. Check that sw.js, the manifest and all three PNG icons are uploaded.":"Offline-Einrichtung fehlgeschlagen. Prüfe, ob sw.js, das Manifest und alle drei PNG-Symbole hochgeladen sind.":"":e?"Offline. Previously saved catalogs, favorites and lineups may be available. New data and uncached images need internet.":"Offline. Bereits gespeicherte Kataloge, Favoriten und Lineups können verfügbar sein. Neue Daten und nicht gespeicherte Bilder benötigen Internet."
-}window.addEventListener("online",a),window.addEventListener("offline",a),new MutationObserver(a).observe(document.documentElement,{attributes:!0,
-attributeFilter:["lang"]}),a(),"serviceWorker"in navigator&&"https:"===location.protocol&&navigator.serviceWorker.register("./sw.js",{scope:"./"}).then(e=>{
-const n=n=>{n&&n.addEventListener("statechange",()=>{"redundant"!==n.state||e.active||(t=!0,a())})};n(e.installing),
-e.addEventListener("updatefound",()=>n(e.installing))}).catch(()=>{t=!0,a()})})();
-</script>
-<!-- /WT HOME SCREEN -->
-</body>
-</html>
+<!-- /WT BR FILTER -->
