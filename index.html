@@ -1227,5 +1227,1618 @@ document.addEventListener('click', event => {
   render();
 })();
 </script>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#141b15">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="WT Companion">
+<title>WT Companion • Military Tactical</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #101510;
+  --panel: #1a231b;
+  --line: #354135;
+  --gold: #dfb968;
+  --text: #eef1e9;
+  --muted: #b5c0af;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+button, input, select { font: inherit; }
+
+button, a, input, select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a { touch-action: manipulation; }
+
+button, select, input {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  min-height: 46px;
+  padding: 11px 14px;
+}
+
+button { cursor: pointer; }
+
+button:hover { border-color: var(--gold); }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: #141b15;
+  padding: 18px max(18px, env(safe-area-inset-left));
+}
+
+.top {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand {
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.brand span { color: var(--gold); }
+
+.brand small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 3px;
+  margin-top: 5px;
+}
+
+main {
+  max-width: 1000px;
+  margin: auto;
+  padding: 24px 18px calc(110px + env(safe-area-inset-bottom));
+}
+
+.eyebrow {
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.hero {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 26px;
+  background:
+    radial-gradient(ellipse at top right, #394b2d, transparent 70%),
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 22px,
+      #ffffff03 22px 23px
+    ),
+    var(--panel);
+}
+
+h1 {
+  font-size: clamp(28px, 6vw, 46px);
+  line-height: 1.1;
+  margin: 15px 0;
+}
+
+h2 {
+  font-size: 22px;
+  margin: 24px 0 14px;
+}
+
+p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.hero p { max-width: 530px; }
+
+.gold {
+  background: var(--gold);
+  color: #151a12;
+  font-weight: 800;
+  border-color: var(--gold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.card, .notice {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+input, select {
+  width: 100%;
+  min-width: 0;
+}
+
+.card { position: relative; }
+
+.card h3 {
+  font-size: 19px;
+  margin: 14px 0 8px;
+}
+
+.badge {
+  display: inline-block;
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 1px;
+  border: 1px solid var(--line);
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+
+.symbol {
+  font-size: 30px;
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+.card p {
+  font-size: 13px;
+  margin: 8px 0 18px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.link {
+  color: var(--gold);
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.star {
+  font-size: 23px;
+  padding: 5px 13px;
+  color: var(--gold);
+}
+
+.star[aria-pressed="true"] {
+  background: #dfb96820;
+  border-color: var(--gold);
+}
+
+.notice {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-top: 18px;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 30px;
+  border: 1px dashed var(--line);
+  border-radius: 16px;
+  color: var(--muted);
+}
+
+nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #141b15f5;
+  border-top: 1px solid var(--line);
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  backdrop-filter: blur(12px);
+  z-index: 5;
+}
+
+nav button {
+  border: 0;
+  background: transparent;
+  flex: 1;
+  max-width: 170px;
+  padding: 8px 4px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+nav button span {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 4px;
+}
+
+nav button[aria-current="page"] {
+  background: #dfb96815;
+  color: var(--gold);
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 32px;
+  line-height: 1.7;
+}
+
+#status {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+#status:empty { display: none; }
+
+#vehicle-detail {
+  width: min(560px, calc(100% - 28px));
+  max-height: 85dvh;
+  overflow-y: auto;
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: 24px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+#vehicle-detail::backdrop { background: #000b; }
+
+#vehicle-detail h2 { margin: 16px 0; }
+
+#vehicle-detail table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#vehicle-detail th,
+#vehicle-detail td {
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  font-size: 14px;
+}
+
+#vehicle-detail th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+#vehicle-detail td {
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.detail-button {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.nation-card { text-align: left; }
+
+.nation-card strong {
+  display: block;
+  font-size: 21px;
+  margin: 12px 0;
+}
+
+.nation-card span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.catalog-filters {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.catalog-filters input { grid-column: 1 / -1; }
+
+.catalog-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.catalog-bar button { margin-top: 12px; }
+
+#catalog-results {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.catalog-br {
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.catalog-card h3 { overflow-wrap: anywhere; }
+
+@media (max-width: 700px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .hero { padding: 22px; }
+  .brand { font-size: 14px; }
+}
+
+@media (max-width: 420px) {
+  .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="top">
+    <div class="brand">
+      <span>WT</span> COMPANION
+      <small>MILITARY TACTICAL</small>
+    </div>
+    <button id="language" aria-label="Switch to English">EN</button>
+  </div>
+</header>
+
+<main>
+  <div id="content"></div>
+  <p id="status" role="status"></p>
+  <footer id="footer"></footer>
+</main>
+
+<nav id="navigation" aria-label="Navigation"></nav>
+
+<dialog
+  id="vehicle-detail"
+  aria-labelledby="detail-title"
+></dialog>
+
+<script>
+'use strict';
+
+let lang = 'de';
+
+try {
+  lang = localStorage.getItem('wt-language') === 'en'
+    ? 'en'
+    : 'de';
+} catch {}
+
+/* Diese Einträge dienen nur der Übernahme alter Favoriten. */
+const vehicles = [
+  {id:'bf109',name:'Bf 109 E-3',nation:'de',type:'air'},
+  {id:'fw190',name:'Fw 190 A-1',nation:'de',type:'air'},
+  {id:'p51',name:'P-51D-5',nation:'us',type:'air'},
+  {id:'p47',name:'P-47D-28',nation:'us',type:'air'},
+  {id:'spitfire',name:'Spitfire Mk Ia',nation:'gb',type:'air'},
+  {id:'yak',name:'Yak-1',nation:'su',type:'air'},
+  {id:'tiger',name:'Tiger H1',nation:'de',type:'ground'},
+  {id:'panther',name:'Panther D',nation:'de',type:'ground'},
+  {id:'sherman',name:'M4A1',nation:'us',type:'ground'},
+  {id:'chaffee',name:'M24',nation:'us',type:'ground'},
+  {id:'cromwell',name:'Cromwell V',nation:'gb',type:'ground'},
+  {id:'t34',name:'T-34 (1942)',nation:'su',type:'ground'}
+];
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
+
+(() => {
+  const API =
+    'https://wtvehiclesapi.duckdns.org/api/vehicles';
+
+  const LOCALES =
+    'https://raw.githubusercontent.com/Sgambe33/WT-Vehicle-Data-Extract/master/locales/';
+
+  const DAY = 86400000;
+
+  const nations = {
+    germany: ['Deutschland', 'Germany', '🇩🇪'],
+    usa: ['USA', 'USA', '🇺🇸'],
+    britain: ['Großbritannien', 'Great Britain', '🇬🇧'],
+    ussr: ['UdSSR', 'USSR', '★'],
+    france: ['Frankreich', 'France', '🇫🇷'],
+    italy: ['Italien', 'Italy', '🇮🇹'],
+    japan: ['Japan', 'Japan', '🇯🇵'],
+    china: ['China', 'China', '🇨🇳'],
+    sweden: ['Schweden', 'Sweden', '🇸🇪'],
+    israel: ['Israel', 'Israel', '🇮🇱']
+  };
+
+  const categories = {
+    all: ['Alle Fahrzeuge', 'All vehicles'],
+    air: ['Flugzeuge', 'Aircraft'],
+    heli: ['Hubschrauber', 'Helicopters'],
+    ground: ['Bodenfahrzeuge', 'Ground vehicles'],
+    blue: ['Hochseeflotte', 'Bluewater fleet'],
+    coast: ['Küstenflotte', 'Coastal fleet'],
+    other: ['Weitere Typen', 'Other types']
+  };
+
+  const legacy = {
+    bf109: 'bf-109e-3',
+    fw190: 'fw-190a-1',
+    p51: 'p-51d-5',
+    p47: 'p-47d-28',
+    spitfire: 'spitfire_mk1',
+    yak: 'yak-1_early',
+    tiger: 'germ_pzkpfw_VI_ausf_h1_tiger',
+    panther: 'germ_pzkpfw_V_ausf_d_panther',
+    sherman: 'us_m4a1_1942_sherman',
+    chaffee: 'us_m24_chaffee',
+    cromwell: 'uk_a27m_cromwell_5',
+    t34: 'ussr_t_34_1942'
+  };
+
+  const label = (de, en) => lang === 'de' ? de : en;
+
+  const nationName = key =>
+    nations[key]?.[lang === 'de' ? 0 : 1] || key;
+
+  const categoryName = key =>
+    categories[key][lang === 'de' ? 0 : 1];
+
+  const escape = escapeHTML;
+
+  function readJSON(key, fallback) {
+    try {
+      return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  let storageWarning = false;
+
+  function writeJSON(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      storageWarning = true;
+    }
+  }
+
+  const oldFavorites = readJSON('wt-favorites', []);
+
+  const saved = new Set(
+    Array.isArray(oldFavorites)
+      ? oldFavorites
+          .filter(x => typeof x === 'string')
+          .map(id => legacy[id] || id)
+      : []
+  );
+
+  let snapshots = readJSON('wt-snapshots', {});
+
+  if (
+    !snapshots ||
+    Array.isArray(snapshots) ||
+    typeof snapshots !== 'object'
+  ) {
+    snapshots = {};
+  }
+
+  vehicles.forEach(v => {
+    const id = legacy[v.id];
+
+    if (id && saved.has(id) && !snapshots[id]) {
+      snapshots[id] = {
+        id,
+        country: {
+          de: 'germany',
+          us: 'usa',
+          gb: 'britain',
+          su: 'ussr'
+        }[v.nation],
+        category: v.type,
+        name: v.name,
+        rank: null,
+        ab: null,
+        rb: null,
+        sb: null
+      };
+    }
+  });
+
+  writeJSON('wt-favorites', [...saved]);
+  writeJSON('wt-snapshots', snapshots);
+
+  let view = 'nations';
+  let country = 'germany';
+  let category = 'all';
+  let search = '';
+  let rank = 'all';
+  let mode = 'rb';
+  let shown = 60;
+
+  let busy = false;
+  let error = '';
+  let loadedAt = 0;
+  let items = [];
+  let detailSerial = 0;
+
+  const memory = {};
+  const pending = {};
+  const translations = {};
+
+  const root = document.getElementById('content');
+  const modal = document.getElementById('vehicle-detail');
+
+  function classify(type) {
+    if (['fighter', 'assault', 'bomber'].includes(type)) {
+      return 'air';
+    }
+
+    if (
+      ['attack_helicopter', 'utility_helicopter'].includes(type)
+    ) {
+      return 'heli';
+    }
+
+    if ([
+      'tank',
+      'light_tank',
+      'medium_tank',
+      'heavy_tank',
+      'tank_destroyer',
+      'spaa',
+      'lbv',
+      'mbv',
+      'hbv',
+      'exoskeleton'
+    ].includes(type)) {
+      return 'ground';
+    }
+
+    if ([
+      'destroyer',
+      'light_cruiser',
+      'heavy_cruiser',
+      'battlecruiser',
+      'battleship',
+      'ship'
+    ].includes(type)) {
+      return 'blue';
+    }
+
+    if ([
+      'boat',
+      'heavy_boat',
+      'barge',
+      'frigate'
+    ].includes(type)) {
+      return 'coast';
+    }
+
+    return 'other';
+  }
+
+  function normalize(v) {
+    return {
+      id: v.identifier,
+      country: v.country,
+      category: classify(v.vehicle_type),
+      rank: v.era,
+      ab: v.arcade_br,
+      rb: v.realistic_br,
+      sb: v.simulator_br,
+      grb: v.realistic_ground_br,
+      gsb: v.simulator_ground_br,
+      premium: !!(v.is_premium || v.is_pack),
+      event: !!v.event,
+      crew: v.crew_total_count,
+      hull: v.hull_armor,
+      turret: v.turret_armor
+    };
+  }
+
+  function vehicleName(v) {
+    const key = v.id.toLowerCase() + '_short';
+
+    return (
+      translations[lang]?.vehicles?.[key] ||
+      translations.en?.vehicles?.[key] ||
+      v.name ||
+      v.id
+    );
+  }
+
+  function br(value) {
+    return typeof value === 'number' && Number.isFinite(value)
+      ? value.toFixed(1)
+      : '—';
+  }
+
+  function sourceURL(v) {
+    return (
+      'https://wiki.warthunder.com/unit/' +
+      encodeURIComponent(v.id)
+    );
+  }
+
+  async function request(url) {
+    const controller = new AbortController();
+
+    const timer = setTimeout(
+      () => controller.abort(),
+      25000
+    );
+
+    try {
+      const response = await fetch(url, {
+        signal: controller.signal
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          response.status === 429
+            ? label(
+                'Anfragelimit erreicht. Bitte später erneut versuchen.',
+                'Request limit reached. Please try later.'
+              )
+            : 'HTTP ' + response.status
+        );
+      }
+
+      return await response.json();
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function loadNames(language) {
+    const key = 'wt-names-v1-' + language;
+    const cached = readJSON(key, null);
+
+    if (cached?.data) {
+      translations[language] = cached.data;
+
+      if (Date.now() - cached.at < DAY) return;
+    }
+
+    try {
+      const data = await request(
+        LOCALES + language + '.json'
+      );
+
+      if (!data.vehicles) {
+        throw new Error('Names');
+      }
+
+      translations[language] = {
+        vehicles: data.vehicles,
+        weapons: data.weapons || {}
+      };
+
+      writeJSON(key, {
+        at: Date.now(),
+        data: translations[language]
+      });
+    } catch {}
+
+    if (view === 'nations' || view === 'info') return;
+
+    drawCards();
+  }
+
+  async function loadCountry(key) {
+    if (pending[key]) return pending[key];
+
+    pending[key] = (async () => {
+      const cache =
+        memory[key] ||
+        readJSON('wt-country-v1-' + key, null);
+
+      if (
+        cache?.items?.length &&
+        Date.now() - cache.at < DAY
+      ) {
+        memory[key] = cache;
+        return cache;
+      }
+
+      const collected = [];
+      let complete = false;
+
+      try {
+        for (let page = 0; page < 50; page++) {
+          const batch = await request(
+            API +
+            '?country=' + encodeURIComponent(key) +
+            '&limit=200&page=' + page +
+            '&excludeKillstreak=true' +
+            '&excludeEventVehicles=true'
+          );
+
+          if (
+            !Array.isArray(batch) ||
+            batch.some(v =>
+              typeof v.identifier !== 'string' ||
+              v.country !== key
+            )
+          ) {
+            throw new Error(label(
+              'Unerwartetes Datenformat.',
+              'Unexpected data format.'
+            ));
+          }
+
+          collected.push(...batch.map(normalize));
+
+          if (country === key && view === 'catalog') {
+            document.getElementById('catalog-results')
+              .textContent =
+                label('Lade Fahrzeuge: ', 'Loading vehicles: ') +
+                collected.length;
+          }
+
+          if (batch.length < 200) {
+            complete = true;
+            break;
+          }
+        }
+
+        if (!complete) {
+          throw new Error(label(
+            'Katalog zu groß; Laden abgebrochen.',
+            'Catalog too large; loading stopped.'
+          ));
+        }
+
+        const data = {
+          at: Date.now(),
+          items: [
+            ...new Map(
+              collected.map(v => [v.id, v])
+            ).values()
+          ]
+        };
+
+        memory[key] = data;
+        writeJSON('wt-country-v1-' + key, data);
+
+        return data;
+      } catch (e) {
+        if (cache?.items?.length) {
+          memory[key] = cache;
+          return {...cache, stale: true};
+        }
+
+        throw e;
+      }
+    })();
+
+    try {
+      return await pending[key];
+    } finally {
+      delete pending[key];
+    }
+  }
+
+  async function selectCountry(key) {
+    if (!nations[key]) return;
+
+    country = key;
+    view = 'catalog';
+    category = 'all';
+    search = '';
+    rank = 'all';
+    shown = 60;
+    busy = true;
+    error = '';
+    items = [];
+    loadedAt = 0;
+
+    draw();
+
+    try {
+      const data = await loadCountry(key);
+
+      if (country !== key || view !== 'catalog') return;
+
+      items = data.items;
+      loadedAt = data.at;
+
+      if (data.stale) {
+        error = label(
+          'Quelle nicht erreichbar. Letzter gespeicherter Stand wird angezeigt.',
+          'Source unavailable. Showing last saved data.'
+        );
+      }
+
+      items.forEach(v => {
+        if (saved.has(v.id)) {
+          snapshots[v.id] = {
+            ...v,
+            name: vehicleName(v)
+          };
+        }
+      });
+
+      writeJSON('wt-snapshots', snapshots);
+    } catch (e) {
+      if (country !== key || view !== 'catalog') return;
+
+      error =
+        label('Laden fehlgeschlagen: ', 'Loading failed: ') +
+        e.message;
+    } finally {
+      if (country === key && view === 'catalog') {
+        busy = false;
+        drawCards();
+      }
+    }
+  }
+
+  function draw() {
+    document.documentElement.lang = lang;
+
+    document.getElementById('language').textContent =
+      lang === 'de' ? 'EN' : 'DE';
+
+    document.getElementById('language').setAttribute(
+      'aria-label',
+      label('Switch to English', 'Auf Deutsch wechseln')
+    );
+
+    const tabs = [
+      ['nations', '⚑', label('Nationen', 'Nations')],
+      ['catalog', '▦', label('Katalog', 'Catalog')],
+      ['favorites', '★', label('Favoriten', 'Favorites')],
+      ['info', 'ⓘ', 'Info']
+    ];
+
+    document.getElementById('navigation').innerHTML =
+      tabs.map(([key, icon, name]) => `
+        <button
+          data-view="${key}"
+          ${view === key ? 'aria-current="page"' : ''}
+        >
+          <span aria-hidden="true">${icon}</span>
+          ${name}
+        </button>
+      `).join('');
+
+    document.getElementById('footer').textContent = label(
+      'Inoffizielles Fanprojekt · Daten: WT Vehicles API / Sgambe33',
+      'Unofficial fan project · Data: WT Vehicles API / Sgambe33'
+    );
+
+    document.getElementById('status').textContent =
+      storageWarning
+        ? label(
+            'Browser-Speicher voll oder blockiert. Änderungen können beim Schließen verloren gehen.',
+            'Browser storage full or blocked. Changes may be lost when closing.'
+          )
+        : '';
+
+    if (view === 'nations') {
+      root.innerHTML = `
+        <section class="hero">
+          <div class="eyebrow">
+            MILITARY TACTICAL / NATIONS
+          </div>
+
+          <h1>
+            ${label(
+              'Wähle deine Nation.',
+              'Choose your nation.'
+            )}
+          </h1>
+
+          <p>
+            ${label(
+              'Danach siehst du die Fahrzeuge ihres Forschungsbaums, einschließlich Premium- und Eventfahrzeugen aus der Datenquelle.',
+              'Explore its research nation, including premium and event vehicles available in the data source.'
+            )}
+          </p>
+        </section>
+
+        <h2>
+          ${label('Forschungsnationen', 'Research nations')}
+        </h2>
+
+        <div class="grid">
+          ${Object.keys(nations).map(key => `
+            <button
+              class="card nation-card"
+              data-country="${key}"
+            >
+              <div class="symbol" aria-hidden="true">
+                ${nations[key][2]}
+              </div>
+
+              <strong>${nationName(key)}</strong>
+
+              <span>
+                ${label(
+                  'Fahrzeuge ansehen →',
+                  'View vehicles →'
+                )}
+              </span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      return;
+    }
+
+    if (view === 'info') {
+      root.innerHTML = `
+        <h1>
+          ${label('Über den Katalog', 'About the catalog')}
+        </h1>
+
+        <div class="notice">
+          ${label(
+            'Der Katalog lädt alle von der Community-Quelle zurückgegebenen Fahrzeuge pro Forschungsnation. Testfahrzeuge und bestimmte Sondermodi sind ausgeschlossen. Vollständigkeit und Aktualität hängen vom Anbieter ab. Keine offizielle Gaijin-API.',
+            'The catalog loads all vehicles returned by the community source for each research nation. Test vehicles and certain special modes are excluded. Coverage and freshness depend on the provider. Not an official Gaijin API.'
+          )}
+        </div>
+
+        <div class="notice">
+          ${label(
+            'Geladene Länder und Namen werden für 24 Stunden gespeichert und beim nächsten Öffnen nach Ablauf erneut angefragt. Favoriten bleiben lokal auf diesem Gerät. Ohne gespeicherten Katalog ist Internet nötig.',
+            'Loaded nations and names are cached for 24 hours and requested again on the next visit after expiry. Favorites stay on this device. Internet is needed without a cached catalog.'
+          )}
+        </div>
+
+        <p>
+          <a
+            class="link"
+            href="https://github.com/Sgambe33/WarThunder-Vehicles-API"
+            target="_blank"
+            rel="noopener noreferrer"
+          >WT Vehicles API / Sgambe33 ↗</a>
+        </p>
+
+        <p>
+          <a
+            class="link"
+            href="https://github.com/Sgambe33/WT-Vehicle-Data-Extract"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ${label(
+              'Namensdaten & Quelle (GPL-3.0) ↗',
+              'Name data & source (GPL-3.0) ↗'
+            )}
+          </a>
+        </p>
+      `;
+
+      return;
+    }
+
+    root.innerHTML = `
+      <div class="eyebrow">VEHICLE CATALOG</div>
+
+      <h1>
+        ${view === 'favorites'
+          ? label('Deine Favoriten', 'Your favorites')
+          : nationName(country)}
+      </h1>
+
+      <div class="catalog-filters">
+        ${view === 'catalog' ? `
+          <select id="choose-country" aria-label="Nation">
+            ${Object.keys(nations).map(key => `
+              <option
+                value="${key}"
+                ${key === country ? 'selected' : ''}
+              >${nationName(key)}</option>
+            `).join('')}
+          </select>
+        ` : ''}
+
+        <select
+          id="choose-category"
+          aria-label="${label(
+            'Fahrzeugbereich',
+            'Vehicle category'
+          )}"
+        >
+          ${Object.keys(categories).map(key => `
+            <option
+              value="${key}"
+              ${key === category ? 'selected' : ''}
+            >${categoryName(key)}</option>
+          `).join('')}
+        </select>
+
+        <select
+          id="choose-rank"
+          aria-label="${label('Rang', 'Rank')}"
+        >
+          <option value="all">
+            ${label('Alle Ränge', 'All ranks')}
+          </option>
+
+          ${Array.from({length: 9}, (_, i) => i + 1)
+            .map(value => `
+              <option
+                value="${value}"
+                ${rank === String(value) ? 'selected' : ''}
+              >
+                ${label('Rang', 'Rank')} ${value}
+              </option>
+            `).join('')}
+        </select>
+
+        <select
+          id="choose-mode"
+          aria-label="${label('Spielmodus', 'Game mode')}"
+        >
+          ${[
+            ['ab', 'Arcade'],
+            ['rb', label('Realistisch', 'Realistic')],
+            ['sb', 'Simulator']
+          ].map(([key, name]) => `
+            <option
+              value="${key}"
+              ${mode === key ? 'selected' : ''}
+            >${name}</option>
+          `).join('')}
+        </select>
+
+        <input
+          id="catalog-search"
+          type="search"
+          value="${escape(search)}"
+          placeholder="${label(
+            'Fahrzeug suchen …',
+            'Search vehicles …'
+          )}"
+          aria-label="${label(
+            'Fahrzeug suchen',
+            'Search vehicles'
+          )}"
+        >
+      </div>
+
+      <p id="catalog-results" role="status"></p>
+      <div class="grid" id="catalog-cards"></div>
+      <div id="catalog-more" class="catalog-bar"></div>
+    `;
+
+    document.getElementById('choose-country')
+      ?.addEventListener('change', e => {
+        selectCountry(e.target.value);
+      });
+
+    const changes = [
+      ['choose-category', value => category = value],
+      ['choose-rank', value => rank = value],
+      ['choose-mode', value => mode = value]
+    ];
+
+    for (const [id, change] of changes) {
+      document.getElementById(id)
+        .addEventListener('change', e => {
+          change(e.target.value);
+          shown = 60;
+          drawCards();
+        });
+    }
+
+    document.getElementById('catalog-search')
+      .addEventListener('input', e => {
+        search = e.target.value;
+        shown = 60;
+        drawCards();
+      });
+
+    drawCards();
+  }
+
+  function drawCards() {
+    if (!['catalog', 'favorites'].includes(view)) return;
+
+    const list = view === 'favorites'
+      ? [...saved].map(id => snapshots[id] || {
+          id,
+          name: id,
+          category: 'other',
+          country: '',
+          rank: null
+        })
+      : items;
+
+    const query = search
+      .toLocaleLowerCase()
+      .replace(/[\s_-]+/g, '');
+
+    const filtered = list.filter(v =>
+      (category === 'all' || v.category === category) &&
+      (rank === 'all' || String(v.rank) === rank) &&
+      (vehicleName(v) + ' ' + v.id)
+        .toLocaleLowerCase()
+        .replace(/[\s_-]+/g, '')
+        .includes(query)
+    ).sort((a, b) =>
+      (a.rank || 0) - (b.rank || 0) ||
+      vehicleName(a).localeCompare(vehicleName(b))
+    );
+
+    const status = document.getElementById('catalog-results');
+
+    status.textContent = busy && view === 'catalog'
+      ? label('Katalog wird geladen …', 'Loading catalog …')
+      : error && view === 'catalog'
+        ? error
+        : filtered.length + ' ' + label('Treffer', 'results') +
+          (loadedAt && view === 'catalog'
+            ? ' · ' + label('Abgerufen: ', 'Retrieved: ') +
+              new Date(loadedAt).toLocaleString(
+                lang === 'de' ? 'de-DE' : 'en-GB'
+              )
+            : '');
+
+    const target = document.getElementById('catalog-cards');
+
+    target.innerHTML = filtered.slice(0, shown)
+      .map(v => `
+        <article class="card catalog-card">
+          <span class="badge">
+            ${escape(nationName(v.country))}
+            · ${categoryName(v.category)}
+            ${v.premium ? ' · PREMIUM' : ''}
+            ${v.event ? ' · EVENT' : ''}
+          </span>
+
+          <h3>${escape(vehicleName(v))}</h3>
+
+          <p>
+            ${label('Rang', 'Rank')}
+            ${v.rank || '—'} · ${mode.toUpperCase()}
+          </p>
+
+          <div class="catalog-br">
+            BR ${br(v[mode])}
+          </div>
+
+          <div class="actions">
+            <a
+              class="link"
+              href="${sourceURL(v)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Wiki ↗</a>
+
+            <button
+              class="star"
+              data-star="${escape(v.id)}"
+              aria-pressed="${saved.has(v.id)}"
+              aria-label="${
+                label(
+                  'Favorit umschalten: ',
+                  'Toggle favorite: '
+                ) + escape(vehicleName(v))
+              }"
+            >${saved.has(v.id) ? '★' : '☆'}</button>
+          </div>
+
+          <button
+            class="detail-button gold"
+            data-inspect="${escape(v.id)}"
+          >
+            ${label(
+              'Fahrzeugdetails →',
+              'Vehicle details →'
+            )}
+          </button>
+        </article>
+      `).join('') || (!busy ? `
+        <div class="empty">
+          ${label(
+            'Keine passenden Fahrzeuge.',
+            'No matching vehicles.'
+          )}
+        </div>
+      ` : '');
+
+    document.getElementById('catalog-more').innerHTML =
+      error && view === 'catalog' && !busy && !items.length
+        ? `
+          <button data-retry>
+            ${label('Erneut versuchen', 'Try again')}
+          </button>
+        `
+        : filtered.length > shown
+          ? `
+            <button data-more>
+              ${label(
+                'Weitere Fahrzeuge laden',
+                'Show more vehicles'
+              )}
+              (${Math.min(60, filtered.length - shown)})
+            </button>
+          `
+          : '';
+  }
+
+  async function inspect(id) {
+    const serial = ++detailSerial;
+
+    const basic =
+      items.find(v => v.id === id) ||
+      snapshots[id] ||
+      {id};
+
+    let detailed = null;
+
+    function paint(message = '') {
+      const v = detailed || basic;
+      const raw = !!detailed;
+
+      const air = raw
+        ? classify(v.vehicle_type) === 'air'
+        : basic.category === 'air';
+
+      const rows = [
+        [
+          label('Nation', 'Nation'),
+          nationName(v.country || basic.country || '')
+        ],
+        [
+          label('Rang', 'Rank'),
+          raw ? v.era : v.rank
+        ],
+        [
+          'BR · ' +
+          (air
+            ? label('Luft', 'Air')
+            : label('Boden/Flotte', 'Ground/Fleet')) +
+          ' · AB',
+          br(raw ? v.arcade_br : v.ab)
+        ],
+        ['BR · RB', br(raw ? v.realistic_br : v.rb)],
+        ['BR · SB', br(raw ? v.simulator_br : v.sb)]
+      ];
+
+      if (
+        air &&
+        (raw ? v.realistic_ground_br : v.grb) !==
+        (raw ? v.realistic_br : v.rb)
+      ) {
+        rows.push([
+          'BR · ' + label('Boden-RB', 'Ground RB'),
+          br(raw ? v.realistic_ground_br : v.grb)
+        ]);
+      }
+
+      if (
+        air &&
+        (raw ? v.simulator_ground_br : v.gsb) !==
+        (raw ? v.simulator_br : v.sb)
+      ) {
+        rows.push([
+          'BR · ' + label('Boden-SB', 'Ground SB'),
+          br(raw ? v.simulator_ground_br : v.gsb)
+        ]);
+      }
+
+      const crew = raw ? v.crew_total_count : v.crew;
+
+      if (crew) {
+        rows.push([label('Besatzung', 'Crew'), crew]);
+      }
+
+      const armorFields = [
+        ['hull_armor', label('Wanne F/S/H', 'Hull F/S/R')],
+        ['turret_armor', label('Turm F/S/H', 'Turret F/S/R')]
+      ];
+
+      for (const [key, name] of armorFields) {
+        const value = raw
+          ? v[key]
+          : v[key === 'hull_armor' ? 'hull' : 'turret'];
+
+        if (Array.isArray(value) && value.length) {
+          rows.push([name, value.join(' / ') + ' mm']);
+        }
+      }
+
+      if (raw) {
+        if (v.mass) {
+          rows.push([
+            label('Masse', 'Mass'),
+            (v.mass / 1000).toLocaleString(
+              lang === 'de' ? 'de-DE' : 'en-GB'
+            ) + ' t'
+          ]);
+        }
+
+        const speedFields = [
+          ['max_speed_ab', 'AB'],
+          ['max_speed_rb_sb', 'RB/SB']
+        ];
+
+        for (const [key, name] of speedFields) {
+          if (typeof v.engine?.[key] === 'number') {
+            rows.push([
+              label('Geschwindigkeit · ', 'Speed · ') + name,
+              v.engine[key] + ' km/h'
+            ]);
+          }
+        }
+
+        if (Array.isArray(v.weapons)) {
+          v.weapons.forEach(w => {
+            const key = w.name.toLowerCase();
+
+            rows.push([
+              label('Bewaffnung', 'Armament'),
+              (w.count || 1) + ' × ' +
+              (
+                translations[lang]?.weapons?.[key] ||
+                translations.en?.weapons?.[key] ||
+                w.name
+              )
+            ]);
+          });
+        }
+
+        rows.push([
+          label('Datenversion', 'Data version'),
+          v.version || '—'
+        ]);
+      }
+
+      modal.innerHTML = `
+        <button id="close-catalog-detail" autofocus>
+          ${label('Schließen', 'Close')} ✕
+        </button>
+
+        <h2 id="detail-title">
+          ${escape(vehicleName(basic))}
+        </h2>
+
+        <table>
+          <tbody>
+            ${rows.map(([key, value]) => `
+              <tr>
+                <th scope="row">${escape(key)}</th>
+                <td>${escape(value ?? '—')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <p role="status" class="notice">
+          ${escape(message || label(
+            'Community-Daten. Fehlende Werte werden nicht ergänzt. Modus und Ausbau können Werte beeinflussen.',
+            'Community data. Missing values are not invented. Mode and modifications can affect values.'
+          ))}
+        </p>
+
+        <a
+          class="link"
+          href="${sourceURL(basic)}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ${label(
+            'Offizielles Wiki ↗',
+            'Official wiki ↗'
+          )}
+        </a>
+      `;
+
+      document.getElementById('close-catalog-detail').onclick =
+        () => {
+          ++detailSerial;
+          modal.close();
+        };
+    }
+
+    paint(label(
+      'Weitere Details werden geladen …',
+      'Loading further details …'
+    ));
+
+    modal.showModal();
+
+    const key = 'wt-detail-v1-' + id;
+    const cached = readJSON(key, null);
+
+    try {
+      detailed = cached && Date.now() - cached.at < DAY
+        ? cached.data
+        : await request(API + '/' + encodeURIComponent(id));
+
+      if (detailed.identifier !== id) {
+        throw new Error('Data');
+      }
+
+      if (!cached || detailed !== cached.data) {
+        writeJSON(key, {
+          at: Date.now(),
+          data: detailed
+        });
+      }
+
+      if (serial === detailSerial && modal.open) {
+        paint();
+      }
+    } catch {
+      detailed = cached?.data || null;
+
+      if (serial === detailSerial && modal.open) {
+        paint(label(
+          'Detailquelle nicht erreichbar. Verfügbare gespeicherte Werte werden angezeigt.',
+          'Detail source unavailable. Showing available cached values.'
+        ));
+      }
+    }
+  }
+
+  modal.addEventListener('close', () => {
+    ++detailSerial;
+  });
+
+  document.getElementById('language')
+    .addEventListener('click', () => {
+      lang = lang === 'de' ? 'en' : 'de';
+
+      try {
+        localStorage.setItem('wt-language', lang);
+      } catch {
+        storageWarning = true;
+      }
+
+      draw();
+      loadNames(lang);
+    });
+
+  document.addEventListener('click', event => {
+    const element = event.target.closest(
+      '[data-country], [data-view], [data-star], ' +
+      '[data-inspect], [data-more], [data-retry]'
+    );
+
+    if (!element) return;
+
+    if (element.dataset.country) {
+      selectCountry(element.dataset.country);
+      return;
+    }
+
+    if (element.dataset.view) {
+      const next = element.dataset.view;
+
+      if (next === 'catalog') {
+        selectCountry(country);
+        return;
+      }
+
+      view = next;
+      busy = false;
+      category = 'all';
+      rank = 'all';
+      search = '';
+      shown = 60;
+
+      draw();
+      window.scrollTo({top: 0});
+      return;
+    }
+
+    if (element.hasAttribute('data-retry')) {
+      selectCountry(country);
+      return;
+    }
+
+    if (element.hasAttribute('data-more')) {
+      shown += 60;
+      drawCards();
+      return;
+    }
+
+    if (element.dataset.inspect) {
+      inspect(element.dataset.inspect);
+      return;
+    }
+
+    const id = element.dataset.star;
+
+    if (id) {
+      if (saved.has(id)) {
+        saved.delete(id);
+      } else {
+        saved.add(id);
+
+        const v =
+          items.find(v => v.id === id) ||
+          snapshots[id];
+
+        if (v) {
+          snapshots[id] = {
+            ...v,
+            name: vehicleName(v)
+          };
+        }
+      }
+
+      writeJSON('wt-favorites', [...saved]);
+      writeJSON('wt-snapshots', snapshots);
+
+      if (view === 'favorites') {
+        drawCards();
+      } else {
+        element.textContent = saved.has(id) ? '★' : '☆';
+
+        element.setAttribute(
+          'aria-pressed',
+          String(saved.has(id))
+        );
+      }
+
+      document.getElementById('status').textContent =
+        storageWarning
+          ? label(
+              'Speichern auf diesem Gerät nicht möglich.',
+              'Saving on this device is unavailable.'
+            )
+          : '';
+    }
+  });
+
+  draw();
+  loadNames('en');
+
+  if (lang !== 'en') {
+    loadNames(lang);
+  }
+})();
+</script>
+</body>
+</html>
 </body>
 </html>
