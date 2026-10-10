@@ -907,5 +907,325 @@ document.addEventListener('click', event => {
   }
 });
 </script>
+<script>
+(() => {
+  const database = {
+    bf109: {
+      unit: 'bf-109e-3',
+      rank: 'II',
+      br: [2.7, 2.3, 2.7],
+      crew: 1,
+      gun: '2 × 20 mm MG FF + 2 × 7.92 mm MG 17',
+      speed: '536–591 km/h',
+      height: 5000,
+      ceiling: 11000
+    },
+
+    fw190: {
+      unit: 'fw-190a-1',
+      rank: 'II',
+      br: [3.7, 3.0, 3.3],
+      crew: 1,
+      gun: '2 × 20 mm MG FF/M + 4 × 7.92 mm MG 17',
+      speed: '612–674 km/h',
+      height: 5500,
+      ceiling: 13228,
+      groundBR: [null, 3.3, 3.3]
+    },
+
+    p51: {
+      unit: 'p-51d-5',
+      rank: 'III',
+      br: [4.0, 4.0, 5.0],
+      crew: 1,
+      gun: '6 × 12.7 mm M2 Browning',
+      speed: '657–724 km/h',
+      height: 7620,
+      ceiling: 12700
+    },
+
+    p47: {
+      unit: 'p-47d-28',
+      rank: 'III',
+      br: [4.0, 4.7, 4.3],
+      crew: 1,
+      gun: '8 × 12.7 mm M2 Browning',
+      speed: '673–741 km/h',
+      height: 7071,
+      ceiling: 12500,
+      groundBR: [null, 5.0, 5.0]
+    },
+
+    spitfire: {
+      unit: 'spitfire_mk1',
+      rank: 'II',
+      br: [2.7, 3.0, 2.3],
+      crew: 1,
+      gun: '8 × 7.7 mm Browning',
+      speed: '507–617 km/h',
+      height: 4267,
+      ceiling: 10000
+    },
+
+    yak: {
+      unit: 'yak-1_early',
+      rank: 'II',
+      br: [2.7, 2.3, 2.7],
+      crew: 1,
+      gun: '1 × 20 mm ShVAK + 2 × 7.62 mm ShKAS',
+      speed: '537–601 km/h',
+      height: 5000,
+      ceiling: 10000
+    },
+
+    tiger: {
+      unit: 'germ_pzkpfw_VI_ausf_h1_tiger',
+      rank: 'III',
+      br: [5.7, 5.7, 5.7],
+      crew: 5,
+      gun: '88 mm KwK36',
+      speed: '45–48 km/h',
+      weight: '57.3 t',
+      hull: '100 / 80 / 80 mm',
+      turret: '100 / 80 / 80 mm'
+    },
+
+    panther: {
+      unit: 'germ_pzkpfw_V_ausf_d_panther',
+      rank: 'III',
+      br: [5.7, 5.3, 5.3],
+      crew: 5,
+      gun: '75 mm KwK42',
+      speed: '55–61 km/h',
+      weight: '44.8–45.3 t',
+      hull: '80 / 40 / 40 mm',
+      turret: '100 / 45 / 45 mm'
+    },
+
+    sherman: {
+      unit: 'us_m4a1_1942_sherman',
+      rank: 'II',
+      br: [3.7, 3.7, 3.7],
+      crew: 5,
+      gun: '75 mm M3',
+      speed: '39–43 km/h',
+      weight: '30.6 t',
+      hull: '51 / 38 / 38 mm',
+      turret: '76 / 51 / 51 mm'
+    },
+
+    chaffee: {
+      unit: 'us_m24_chaffee',
+      rank: 'III',
+      br: [3.7, 4.0, 4.0],
+      crew: 5,
+      gun: '75 mm M6',
+      speed: '56–63 km/h',
+      weight: '18.4 t',
+      hull: '25 / 25 / 19 mm',
+      turret: '25 / 25 / 25 mm'
+    },
+
+    cromwell: {
+      unit: 'uk_a27m_cromwell_5',
+      rank: 'III',
+      br: [3.7, 4.0, 4.0],
+      crew: 5,
+      gun: '75 mm OQF Mk.V',
+      speed: '64–72 km/h',
+      weight: '28.5 t',
+      hull: '64 / 46 / 32 mm',
+      turret: '64 / 51 / 44 mm'
+    },
+
+    t34: {
+      unit: 'ussr_t_34_1942',
+      rank: 'II',
+      br: [4.0, 4.0, 4.0],
+      crew: 4,
+      gun: '76 mm F-34',
+      speed: '49–54 km/h',
+      weight: '29.8–30.0 t',
+      hull: '45 / 45 / 40 mm',
+      turret: '53 / 53 / 53 mm'
+    }
+  };
+
+  const yak = vehicles.find(v => v.id === 'yak');
+  if (yak) yak.name = 'Yak-1 (19)';
+
+  const baseCards = originalVehicleCards;
+  const modal = document.getElementById('vehicle-detail');
+
+  const wikiURL = data =>
+    'https://wiki.warthunder.com/unit/' + data.unit;
+
+  cards = function () {
+    baseCards();
+
+    document.querySelectorAll('#cards [data-favorite]')
+      .forEach(star => {
+        const id = star.dataset.favorite;
+        const data = database[id];
+
+        if (!data) return;
+
+        const article = star.closest('article');
+        article.querySelector('.link').href = wikiURL(data);
+
+        const button = document.createElement('button');
+        button.className = 'detail-button gold';
+        button.dataset.vehicleDetail = id;
+
+        button.textContent = lang === 'de'
+          ? 'Fahrzeugdetails →'
+          : 'Vehicle details →';
+
+        article.appendChild(button);
+      });
+  };
+
+  function openDetails(id) {
+    const vehicle = vehicles.find(v => v.id === id);
+    const data = database[id];
+
+    if (!vehicle || !data) return;
+
+    const de = lang === 'de';
+    const air = vehicle.type === 'air';
+
+    const label = (german, english) =>
+      de ? german : english;
+
+    const modes = [
+      'Arcade (AB)',
+      label('Realistisch (RB)', 'Realistic (RB)'),
+      'Simulator (SB)'
+    ];
+
+    const rows = [
+      [label('Nation', 'Nation'), t(vehicle.nation)],
+      [label('Rang', 'Rank'), data.rank]
+    ];
+
+    data.br.forEach((value, index) => {
+      rows.push([
+        'BR · ' +
+        (air ? label('Luft', 'Air') : label('Boden', 'Ground')) +
+        ' · ' + modes[index],
+        value.toFixed(1)
+      ]);
+    });
+
+    if (data.groundBR) {
+      data.groundBR.forEach((value, index) => {
+        if (value !== null) {
+          rows.push([
+            'BR · ' + label('Boden', 'Ground') +
+            ' · ' + modes[index],
+            value.toFixed(1)
+          ]);
+        }
+      });
+    }
+
+    rows.push(
+      [label('Hauptbewaffnung', 'Main armament'), data.gun],
+      [label('Besatzung', 'Crew'), String(data.crew)],
+      [label('Max. Geschwindigkeit¹', 'Max. speed¹'), data.speed]
+    );
+
+    if (air) {
+      rows.push(
+        [
+          label(
+            'Messhöhe für Geschwindigkeit',
+            'Speed measurement altitude'
+          ),
+          data.height + ' m'
+        ],
+        [
+          label('Max. Flughöhe', 'Maximum altitude'),
+          data.ceiling + ' m'
+        ]
+      );
+    } else {
+      rows.push(
+        [label('Gewicht¹', 'Weight¹'), data.weight],
+        [
+          label(
+            'Wanne: Front / Seite / Heck',
+            'Hull: front / side / rear'
+          ),
+          data.hull
+        ],
+        [
+          label(
+            'Turm: Front / Seite / Heck',
+            'Turret: front / side / rear'
+          ),
+          data.turret
+        ]
+      );
+    }
+
+    modal.innerHTML = `
+      <button id="close-all-details" autofocus>
+        ${label('Schließen', 'Close')} ✕
+      </button>
+
+      <h2 id="detail-title">
+        ${escapeHTML(vehicle.name)}
+      </h2>
+
+      <table aria-label="${escapeHTML(vehicle.name)}">
+        <tbody>
+          ${rows.map(([name, value]) => `
+            <tr>
+              <th scope="row">${escapeHTML(name)}</th>
+              <td>${escapeHTML(value)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+
+      <p class="notice">
+        ${label(
+          '¹ Spannen aus den Wiki-Werten für verschiedene Spielmodi und Ausbaustände. Keine garantierte Geschwindigkeit im Gefecht. Geprüft am 10.10.2026; keine automatische Aktualisierung. Bei Flugzeugen beziehen sich die Luft-BRs auf Luftgefechte; abweichende Boden-BRs sind separat aufgeführt.',
+          '¹ Ranges across wiki values for different game modes and modifications. Not a guaranteed combat speed. Checked on 10 October 2026; no automatic updates. Aircraft air BRs apply to air battles; different ground BRs are listed separately.'
+        )}
+      </p>
+
+      <a
+        class="link"
+        href="${wikiURL(data)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ${label(
+          'Quelle: offizielles Wiki ↗',
+          'Source: official wiki ↗'
+        )}
+      </a>
+    `;
+
+    document.getElementById('close-all-details').onclick =
+      () => modal.close();
+
+    modal.showModal();
+  }
+
+  document.addEventListener('click', event => {
+    const button =
+      event.target.closest('[data-vehicle-detail]');
+
+    if (button) {
+      openDetails(button.dataset.vehicleDetail);
+    }
+  });
+
+  render();
+})();
+</script>
 </body>
 </html>
