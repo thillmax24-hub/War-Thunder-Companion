@@ -2995,6 +2995,595 @@ function escapeHTML(value) {
 })();
 </script>
 <!-- /WT VEHICLE IMAGES -->
+<!-- WT VEHICLE COMPARE -->
+<style>
+.wt-compare-panel {
+  margin: 18px 0;
+  padding: 16px;
+  border: 1px solid #344437;
+  border-radius: 14px;
+  background: #172019;
+}
+
+.wt-compare-panel h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.wt-compare-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.wt-compare-message {
+  color: #abb8a9;
+  font-size: 13px;
+}
+
+.wt-compare-pick {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.wt-compare-pick[aria-pressed="true"] {
+  border-color: #dfb968;
+  color: #dfb968;
+  background: #dfb96820;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+#wt-compare-dialog {
+  width: min(760px, 95vw);
+  max-height: 88vh;
+  overflow: auto;
+  border: 1px solid #344437;
+  border-radius: 16px;
+  padding: 20px;
+  background: #172019;
+  color: #edf2e9;
+}
+
+#wt-compare-dialog::backdrop {
+  background: #000b;
+}
+
+.wt-compare-scroll {
+  overflow-x: auto;
+}
+
+#wt-compare-dialog table {
+  width: 100%;
+  min-width: 440px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+#wt-compare-dialog th,
+#wt-compare-dialog td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #344437;
+  vertical-align: top;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+#wt-compare-dialog thead th {
+  color: #dfb968;
+}
+
+#wt-compare-dialog tbody th {
+  color: #abb8a9;
+  font-weight: 500;
+}
+</style>
+
+<script>
+(() => {
+  if (window.wtVehicleCompare) return;
+  window.wtVehicleCompare = true;
+
+  const content = document.getElementById('content');
+  if (!content) return;
+
+  const t = (de, en) =>
+    document.documentElement.lang === 'en' ? en : de;
+
+  const esc = value =>
+    String(value ?? '—').replace(/[&<>"']/g, c => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[c]));
+
+  const read = (key, fallback) => {
+    try {
+      return JSON.parse(localStorage.getItem(key)) ?? fallback;
+    } catch {
+      return fallback;
+    }
+  };
+
+  let selected = read('wt-compare-selection', []);
+
+  if (!Array.isArray(selected)) selected = [];
+
+  selected = selected.filter(v =>
+    v &&
+    typeof v.id === 'string' &&
+    typeof v.name === 'string'
+  ).slice(0, 2);
+
+  const panel = document.createElement('section');
+  panel.className = 'wt-compare-panel';
+  content.before(panel);
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'wt-compare-dialog';
+  dialog.setAttribute('aria-labelledby', 'wt-compare-title');
+  document.body.append(dialog);
+
+  let serial = 0;
+  let panelHTML = '';
+
+  const countries = {
+    germany: ['Deutschland', 'Germany'],
+    usa: ['USA', 'USA'],
+    britain: ['Großbritannien', 'Great Britain'],
+    ussr: ['UdSSR', 'USSR'],
+    france: ['Frankreich', 'France'],
+    italy: ['Italien', 'Italy'],
+    japan: ['Japan', 'Japan'],
+    china: ['China', 'China'],
+    sweden: ['Schweden', 'Sweden'],
+    israel: ['Israel', 'Israel']
+  };
+
+  function name(v) {
+    const language =
+      document.documentElement.lang === 'en' ? 'en' : 'de';
+
+    const names =
+      read('wt-names-v1-' + language, null)?.data?.vehicles;
+
+    return names?.[v.id.toLowerCase() + '_short'] || v.name;
+  }
+
+  function basic(id) {
+    const snapshots = read('wt-snapshots', {});
+
+    if (snapshots?.[id]) return snapshots[id];
+
+    for (const key of Object.keys(countries)) {
+      const item = read('wt-country-v1-' + key, null)
+        ?.items?.find(v => v.id === id);
+
+      if (item) return item;
+    }
+
+    return { id };
+  }
+
+  function update() {
+    const markup = `
+      <h2>${t('Fahrzeugvergleich', 'Vehicle comparison')}</h2>
+
+      <p class="wt-compare-message">
+        ${t(
+          'Wähle zwei Fahrzeuge in den Karten. Du kannst dabei die Nation wechseln.',
+          'Select two vehicles on their cards. You can switch nations between selections.'
+        )}
+      </p>
+
+      <div class="wt-compare-controls">
+        ${selected.map(v => `
+          <button
+            data-compare-remove="${esc(v.id)}"
+            aria-label="${esc(
+              t('Entfernen: ', 'Remove: ') + name(v)
+            )}"
+          >
+            ${esc(name(v))} ×
+          </button>
+        `).join('')}
+
+        <button
+          class="gold"
+          data-compare-open
+          ${selected.length !== 2 ? 'disabled' : ''}
+        >
+          ${t('Vergleichen', 'Compare')} (${selected.length}/2)
+        </button>
+      </div>
+    `;
+
+    if (markup !== panelHTML) {
+      panelHTML = markup;
+      panel.innerHTML = markup;
+    }
+
+    content.querySelectorAll('.catalog-card').forEach(card => {
+      const inspect = card.querySelector('[data-inspect]');
+      if (!inspect) return;
+
+      const id = inspect.dataset.inspect;
+      let button = card.querySelector('[data-compare-pick]');
+
+      if (!button) {
+        button = document.createElement('button');
+        button.className = 'wt-compare-pick';
+        button.dataset.comparePick = id;
+        card.append(button);
+      }
+
+      const active = selected.some(v => v.id === id);
+
+      const label = active
+        ? t(
+            '✓ Für Vergleich ausgewählt',
+            '✓ Selected for comparison'
+          )
+        : t('+ Zum Vergleich', '+ Add to comparison');
+
+      if (button.textContent !== label) {
+        button.textContent = label;
+      }
+
+      if (button.getAttribute('aria-pressed') !== String(active)) {
+        button.setAttribute('aria-pressed', String(active));
+      }
+
+      const disabled = !active && selected.length === 2;
+
+      if (button.disabled !== disabled) {
+        button.disabled = disabled;
+      }
+    });
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(
+        'wt-compare-selection',
+        JSON.stringify(selected)
+      );
+    } catch {}
+
+    update();
+  }
+
+  async function details(v) {
+    const key = 'wt-detail-v1-' + v.id;
+    const cache = read(key, null);
+
+    if (
+      cache?.data?.identifier === v.id &&
+      Date.now() - cache.at < 86400000
+    ) {
+      return { data: cache.data };
+    }
+
+    const controller = new AbortController();
+
+    const timer = setTimeout(() => {
+      controller.abort();
+    }, 25000);
+
+    try {
+      const response = await fetch(
+        'https://wtvehiclesapi.duckdns.org/api/vehicles/' +
+        encodeURIComponent(v.id),
+        { signal: controller.signal }
+      );
+
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+
+      const data = await response.json();
+
+      if (data.identifier !== v.id) {
+        throw new Error('Data');
+      }
+
+      try {
+        localStorage.setItem(
+          key,
+          JSON.stringify({ at: Date.now(), data })
+        );
+      } catch {}
+
+      return { data };
+    } catch {
+      if (cache?.data?.identifier === v.id) {
+        return {
+          data: cache.data,
+          unavailable: true
+        };
+      }
+
+      const b = basic(v.id);
+
+      return {
+        data: {
+          country: b.country,
+          era: b.rank,
+          arcade_br: b.ab,
+          realistic_br: b.rb,
+          simulator_br: b.sb,
+          crew_total_count: b.crew,
+          hull_armor: b.hull,
+          turret_armor: b.turret
+        },
+        unavailable: true
+      };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function compare() {
+    if (selected.length !== 2) return;
+
+    const pair = selected.map(v => ({ ...v }));
+    const current = ++serial;
+
+    dialog.innerHTML = `
+      <button data-compare-close>
+        ${t('Schließen', 'Close')} ✕
+      </button>
+
+      <h2 id="wt-compare-title">
+        ${t('Fahrzeugvergleich', 'Vehicle comparison')}
+      </h2>
+
+      <p role="status">
+        ${t('Details werden geladen …', 'Loading details …')}
+      </p>
+    `;
+
+    dialog.showModal();
+
+    const results = await Promise.all(pair.map(details));
+
+    if (current !== serial || !dialog.open) return;
+
+    const values = results.map(v => v.data);
+
+    const number = v =>
+      typeof v === 'number' && Number.isFinite(v)
+        ? v.toLocaleString(
+            document.documentElement.lang === 'en'
+              ? 'en-GB'
+              : 'de-DE'
+          )
+        : '—';
+
+    const br = v =>
+      typeof v === 'number' && Number.isFinite(v)
+        ? v.toFixed(1)
+        : '—';
+
+    const armor = v =>
+      Array.isArray(v) && v.length
+        ? v.join(' / ') + ' mm'
+        : '—';
+
+    const weapons = v => {
+      const language =
+        document.documentElement.lang === 'en' ? 'en' : 'de';
+
+      const names =
+        read('wt-names-v1-' + language, null)?.data?.weapons || {};
+
+      if (!Array.isArray(v.weapons) || !v.weapons.length) {
+        return '—';
+      }
+
+      return v.weapons.map(w =>
+        (w.count || 1) + ' × ' +
+        (
+          names[String(w.name).toLowerCase()] ||
+          w.name ||
+          '—'
+        )
+      ).join('; ');
+    };
+
+    const rows = [
+      [
+        t('Nation', 'Nation'),
+        v => countries[v.country]
+          ? t(...countries[v.country])
+          : v.country || '—'
+      ],
+      [
+        t('Fahrzeugtyp (Quelle)', 'Vehicle type (source)'),
+        v => v.vehicle_type || '—'
+      ],
+      [
+        t('Rang', 'Rank'),
+        v => number(v.era)
+      ],
+      ['BR · AB', v => br(v.arcade_br)],
+      ['BR · RB', v => br(v.realistic_br)],
+      ['BR · SB', v => br(v.simulator_br)],
+      [
+        t('Boden-BR · RB', 'Ground BR · RB'),
+        v => br(v.realistic_ground_br)
+      ],
+      [
+        t('Boden-BR · SB', 'Ground BR · SB'),
+        v => br(v.simulator_ground_br)
+      ],
+      [
+        t('Besatzung', 'Crew'),
+        v => number(v.crew_total_count)
+      ],
+      [
+        t('Masse', 'Mass'),
+        v => typeof v.mass === 'number'
+          ? number(v.mass / 1000) + ' t'
+          : '—'
+      ],
+      [
+        t('Geschwindigkeit · AB', 'Speed · AB'),
+        v => typeof v.engine?.max_speed_ab === 'number'
+          ? number(v.engine.max_speed_ab) + ' km/h'
+          : '—'
+      ],
+      [
+        t('Geschwindigkeit · RB/SB', 'Speed · RB/SB'),
+        v => typeof v.engine?.max_speed_rb_sb === 'number'
+          ? number(v.engine.max_speed_rb_sb) + ' km/h'
+          : '—'
+      ],
+      [
+        t('Wanne F/S/H', 'Hull F/S/R'),
+        v => armor(v.hull_armor)
+      ],
+      [
+        t('Turm F/S/H', 'Turret F/S/R'),
+        v => armor(v.turret_armor)
+      ],
+      [
+        t('Bewaffnung', 'Armament'),
+        weapons
+      ],
+      [
+        t('Datenversion', 'Data version'),
+        v => v.version || '—'
+      ]
+    ];
+
+    dialog.innerHTML = `
+      <button data-compare-close>
+        ${t('Schließen', 'Close')} ✕
+      </button>
+
+      <h2 id="wt-compare-title">
+        ${t('Fahrzeugvergleich', 'Vehicle comparison')}
+      </h2>
+
+      <div
+        class="wt-compare-scroll"
+        tabindex="0"
+        role="region"
+        aria-label="${t(
+          'Vergleichstabelle, seitlich scrollbar',
+          'Comparison table, scroll horizontally'
+        )}"
+      >
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">
+                ${t('Merkmal', 'Attribute')}
+              </th>
+
+              ${pair.map(v => `
+                <th scope="col">${esc(name(v))}</th>
+              `).join('')}
+            </tr>
+          </thead>
+
+          <tbody>
+            ${rows.map(([label, get]) => `
+              <tr>
+                <th scope="row">${esc(label)}</th>
+
+                ${values.map(v => `
+                  <td>${esc(get(v))}</td>
+                `).join('')}
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="wt-compare-message" role="status">
+        ${
+          results.some(v => v.unavailable)
+            ? t(
+                'Detailquelle teilweise nicht erreichbar. Gespeicherte Werte werden verwendet. ',
+                'Detail source partially unavailable. Using saved values. '
+              )
+            : ''
+        }
+
+        ${t(
+          'Community-Daten. — bedeutet: kein Wert vorhanden. Fahrzeugtyp, Spielmodus und Ausbau beim Vergleich beachten.',
+          'Community data. — means no value is available. Consider vehicle type, game mode and modifications.'
+        )}
+      </p>
+    `;
+  }
+
+  document.addEventListener('click', event => {
+    const button = event.target.closest(
+      '[data-compare-pick],' +
+      '[data-compare-remove],' +
+      '[data-compare-open],' +
+      '[data-compare-close]'
+    );
+
+    if (!button || button.disabled) return;
+
+    if (button.hasAttribute('data-compare-close')) {
+      ++serial;
+      dialog.close();
+      return;
+    }
+
+    if (button.hasAttribute('data-compare-open')) {
+      compare();
+      return;
+    }
+
+    const id =
+      button.dataset.comparePick ||
+      button.dataset.compareRemove;
+
+    if (selected.some(v => v.id === id)) {
+      selected = selected.filter(v => v.id !== id);
+    } else if (selected.length < 2) {
+      const title = button.closest('.catalog-card')
+        ?.querySelector('h3')?.textContent || id;
+
+      selected.push({ id, name: title });
+    }
+
+    save();
+  });
+
+  dialog.addEventListener('close', () => {
+    ++serial;
+  });
+
+  new MutationObserver(update).observe(content, {
+    childList: true,
+    subtree: true
+  });
+
+  new MutationObserver(update).observe(
+    document.documentElement,
+    {
+      attributes: true,
+      attributeFilter: ['lang']
+    }
+  );
+
+  update();
+})();
+</script>
+<!-- /WT VEHICLE COMPARE -->
 </body>
 </html>
 </body>
